@@ -1,24 +1,26 @@
 [versions]
-androidx-lifecycle = "2.9.6"
-composeMultiplatform = "1.10.0"
-junit = "4.13.2"
-kotlin = "2.3.0"
-material3 = "1.10.0-alpha05"
-
-[libraries]
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
-junit = { module = "junit:junit", version.ref = "junit" }
-androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
-compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+java = "25"
+kotlin_version = { strictly = "2.3.0" }
+compose_multiplatform_vsersion = { strictly = "1.10.0" }
 
 [plugins]
-composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
-composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_version" }
+
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose_multiplatform_vsersion" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_version" }
+
+spotless = { id = "com.diffplug.spotless", version = { strictly = "8.2.1" } }
+
+[libraries]
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = { strictly = "0.7.1-0.6.x-compat" } }
+
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose_multiplatform_vsersion" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose_multiplatform_vsersion" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version = { strictly = "1.10.0-alpha05" } }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose_multiplatform_vsersion" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose_multiplatform_vsersion" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose_multiplatform_vsersion" }
+components-ui-tooling-preview = { module = "org.jetbrains.compose.components:components-ui-tooling-preview", version.ref = "compose_multiplatform_vsersion" }
+compose-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version = { strictly = "1.3.0-alpha04" } }
+material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version = { strictly = "1.7.3" } }
+material3-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version = { strictly = "1.11.0-alpha02" } }

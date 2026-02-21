@@ -1,0 +1,4 @@
+* text eol=lf
+*.csv -text
+*.bat text eol=crlf
+*.jar binary
