@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [ "config:recommended", "group:kotlinMonorepo" ],
+  "timezone": "Asia/Tokyo",
+  "reviewers": [ "kukv" ],
+  "labels": [ "dependencies", "renovate" ],
+  "schedule": ["every weekend"],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "separateMinorPatch": true,
+  "dependencyDashboard": true,
+  "automerge": false,
+  "major": {
+    "minimumReleaseAge": "7 days"
+  },
+  "minor": {
+    "minimumReleaseAge": "3 days"
+  },
+  "patch": {
+    "minimumReleaseAge": "3 days"
+  },
+  "packageRules": [
+    {
+      "groupName": "Github Actions",
+      "matchManagers": [ "github-actions" ]
+    },
+    {
+      "matchUpdateTypes": [ "patch", "minor" ],
+      "automerge": true
+    }
+  ]
+}
