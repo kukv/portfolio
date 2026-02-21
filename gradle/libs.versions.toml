@@ -1,6 +1,6 @@
 [versions]
 java = "25"
-kotlin_version = { strictly = "2.3.0" }
+kotlin_version = { strictly = "2.3.10" }
 compose_multiplatform_vsersion = { strictly = "1.10.0" }
 
 [plugins]
