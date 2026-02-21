@@ -1,7 +1,7 @@
 [versions]
 java = "25"
 kotlin_version = { strictly = "2.3.10" }
-compose_multiplatform_vsersion = { strictly = "1.10.0" }
+compose_multiplatform_vsersion = { strictly = "1.10.1" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_version" }
