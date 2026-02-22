@@ -1,0 +1,36 @@
+changelog:
+  exclude:
+    labels:
+
+      - "Close: Duplicate"
+      - "Close: Invalid"
+      - "Close: Wontfix"
+      - "Priority: High"
+      - "Priority: Low"
+      - "Priority: Medium"
+      - "Release note ignored"
+      - "Type: Discussion"
+      - "Type: Help Wanted"
+      - "Type: Publishing"
+      - "Type: Question"
+      - "Type: Test"
+  categories:
+    - title: New Features 🎉
+      labels:
+        - "Type: Feature"
+    - title: Enhancement Updates 💪
+      labels:
+        - "Type: Enhancement"
+    - title: Breaking Changes 🤯
+      labels:
+        - "Type: Specification Change"
+    - title: Bug Fix 💊
+      labels:
+        - "Type: Bug"
+    - title: dependency updates 🛠
+      labels:
+        - "dependencies"
+        - "renovate"
+    - title: Other Changes
+      labels:
+        - "*"
