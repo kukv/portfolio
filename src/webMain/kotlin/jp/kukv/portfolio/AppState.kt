@@ -21,42 +21,34 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+// ── Theme ──────────────────────────────────────────────────────────────────
+
+class ThemeState(isDarkTheme: Boolean = false) {
+    var isDarkTheme by mutableStateOf(isDarkTheme)
+}
+
+@Composable
+fun rememberThemeState(isDarkTheme: Boolean = false): ThemeState = remember { ThemeState(isDarkTheme) }
+
+// ── Window Size ────────────────────────────────────────────────────────────
+
 enum class WindowSizeClass {
     Mobile,
     Tablet,
     Desktop,
 }
 
-class AppState(
-    isDarkTheme: Boolean,
-    windowSizeClass: WindowSizeClass,
-    windowHeight: Dp,
-    val scrollState: ScrollState,
-    val sectionPositions: SnapshotStateMap<String, Int>,
-    val snackbarHostState: SnackbarHostState,
-    val drawerState: androidx.compose.material3.DrawerState,
-    val scope: CoroutineScope,
-) {
-    var isDarkTheme by mutableStateOf(isDarkTheme)
+class WindowSizeState(windowSizeClass: WindowSizeClass, windowHeight: Dp) {
     var windowSizeClass by mutableStateOf(windowSizeClass)
     var windowHeight by mutableStateOf(windowHeight)
 
     val isMobile: Boolean get() = windowSizeClass == WindowSizeClass.Mobile
     val isTablet: Boolean get() = windowSizeClass == WindowSizeClass.Tablet
     val isDesktop: Boolean get() = windowSizeClass == WindowSizeClass.Desktop
-
-    fun navigate(section: String) {
-        scope.launch {
-            val pos = sectionPositions[section] ?: 0
-            scrollState.animateScrollTo(pos)
-        }
-    }
 }
 
-val LocalAppState = compositionLocalOf<AppState> { error("No AppState provided") }
-
 @Composable
-fun rememberAppState(): AppState {
+fun rememberWindowSizeState(): WindowSizeState {
     val windowInfo = LocalWindowInfo.current
     val density = LocalDensity.current
     val windowWidth = with(density) { windowInfo.containerSize.width.toDp() }
@@ -67,29 +59,53 @@ fun rememberAppState(): AppState {
             windowWidth <= 893.dp -> WindowSizeClass.Tablet
             else -> WindowSizeClass.Desktop
         }
+    val state = remember { WindowSizeState(windowSizeClass, windowHeight) }
+    state.windowSizeClass = windowSizeClass
+    state.windowHeight = windowHeight
+    return state
+}
 
+// ── Navigation ─────────────────────────────────────────────────────────────
+
+class NavigationState(
+    val scrollState: ScrollState,
+    val sectionPositions: SnapshotStateMap<String, Int>,
+    val drawerState: androidx.compose.material3.DrawerState,
+    val snackbarHostState: SnackbarHostState,
+    val scope: CoroutineScope,
+) {
+    fun navigate(section: String) {
+        scope.launch {
+            val pos = sectionPositions[section] ?: 0
+            scrollState.animateScrollTo(pos)
+        }
+    }
+}
+
+@Composable
+fun rememberNavigationState(): NavigationState {
     val scrollState = rememberScrollState()
     val sectionPositions = remember { mutableStateMapOf<String, Int>() }
-    val snackbarHostState = remember { SnackbarHostState() }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    return remember { NavigationState(scrollState, sectionPositions, drawerState, snackbarHostState, scope) }
+}
 
-    val appState =
-        remember {
-            AppState(
-                isDarkTheme = false,
-                windowSizeClass = windowSizeClass,
-                windowHeight = windowHeight,
-                scrollState = scrollState,
-                sectionPositions = sectionPositions,
-                snackbarHostState = snackbarHostState,
-                drawerState = drawerState,
-                scope = scope,
-            )
-        }
+// ── App State ──────────────────────────────────────────────────────────────
 
-    appState.windowSizeClass = windowSizeClass
-    appState.windowHeight = windowHeight
+class AppState(
+    val theme: ThemeState,
+    val windowSize: WindowSizeState,
+    val navigation: NavigationState,
+)
 
-    return appState
+val LocalAppState = compositionLocalOf<AppState> { error("No AppState provided") }
+
+@Composable
+fun rememberAppState(): AppState {
+    val theme = rememberThemeState()
+    val windowSize = rememberWindowSizeState()
+    val navigation = rememberNavigationState()
+    return remember { AppState(theme, windowSize, navigation) }
 }
