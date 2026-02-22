@@ -1,8 +1,7 @@
 @file:OptIn(ExperimentalTime::class)
 
-package jp.kukv.personal._extensions
+package jp.kukv.portfolio._extensions.kotlinx.datetime
 
-import jp.kukv.portfolio._extensions.kotlinx.datetime.JST
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
