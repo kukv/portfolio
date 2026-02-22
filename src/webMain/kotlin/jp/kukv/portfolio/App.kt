@@ -93,178 +93,189 @@ import portfolio.generated.resources.x
 fun App() {
     val appState = rememberAppState()
 
-    CompositionLocalProvider(LocalAppState provides appState) {
-        AppTheme(isDarkTheme = appState.theme.isDarkTheme) {
-            if (appState.windowSize.isMobile) {
-                ModalNavigationDrawer(
-                    drawerState = appState.navigation.drawerState,
-                    drawerContent = {
-                        Surface(
-                            modifier = Modifier.fillMaxHeight().width(280.dp),
-                            color = MaterialTheme.colorScheme.surface,
-                        ) {
-                            Column(
-                                modifier = Modifier.fillMaxSize().padding(vertical = 16.dp),
-                            ) {
-                                Text(
-                                    "Portfolio",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                NavigationDrawerItem(
-                                    label = { Text("Home") },
-                                    selected = false,
-                                    onClick = {
-                                        appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                                        appState.navigation.navigate("home")
-                                    },
-                                    modifier = Modifier.padding(horizontal = 8.dp),
-                                )
-                                NavigationDrawerItem(
-                                    label = { Text("About") },
-                                    selected = false,
-                                    onClick = {
-                                        appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                                        appState.navigation.navigate("about")
-                                    },
-                                    modifier = Modifier.padding(horizontal = 8.dp),
-                                )
-                                NavigationDrawerItem(
-                                    label = { Text("Showcase") },
-                                    selected = false,
-                                    onClick = {
-                                        appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                                        appState.navigation.navigate("showcase")
-                                    },
-                                    modifier = Modifier.padding(horizontal = 8.dp),
-                                )
-                                NavigationDrawerItem(
-                                    label = { Text("Contact") },
-                                    selected = false,
-                                    onClick = {
-                                        appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                                        appState.navigation.navigate("contact")
-                                    },
-                                    modifier = Modifier.padding(horizontal = 8.dp),
-                                )
-                                Spacer(modifier = Modifier.weight(1f))
-                                Box(
-                                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-                                    contentAlignment = Alignment.CenterEnd,
-                                ) {
-                                    IconToggleButton(
-                                        checked = appState.theme.isDarkTheme,
-                                        onCheckedChange = { appState.theme.isDarkTheme = it },
-                                    ) {
-                                        Icon(
-                                            imageVector =
-                                                if (appState.theme.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
-                                            contentDescription = "Toggle theme",
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    },
+    AppTheme(appState) {
+        when {
+            appState.windowSize.isMobile -> MobileLayout()
+            else -> DesktopLayout()
+        }
+    }
+}
+
+@Composable
+fun MobileLayout() {
+    val appState = LocalAppState.current
+
+    ModalNavigationDrawer(
+        drawerState = appState.navigation.drawerState,
+        drawerContent = {
+            Surface(
+                modifier = Modifier.fillMaxHeight().width(280.dp),
+                color = MaterialTheme.colorScheme.surface,
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(vertical = 16.dp),
                 ) {
-                    Scaffold(
-                        topBar = {
-                            MobileHeader(
-                                onMenuOpen = { appState.navigation.scope.launch { appState.navigation.drawerState.open() } },
-                            )
+                    Text(
+                        "Portfolio",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    NavigationDrawerItem(
+                        label = { Text("Home") },
+                        selected = false,
+                        onClick = {
+                            appState.navigation.scope.launch { appState.navigation.drawerState.close() }
+                            appState.navigation.navigate("home")
                         },
-                        snackbarHost = { SnackbarHost(appState.navigation.snackbarHostState) },
-                    ) { padding ->
-                        Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxSize()
-                                    .padding(padding)
-                                    .verticalScroll(appState.navigation.scrollState),
-                        ) {
-                            HomeSection(
-                                onNavigate = appState.navigation::navigate,
-                                topPadding = padding.calculateTopPadding(),
-                                modifier =
-                                    Modifier.onGloballyPositioned { coordinates ->
-                                        val pos = coordinates.positionInParent().y.toInt()
-                                        appState.navigation.sectionPositions["home"] = maxOf(0, pos)
-                                    },
-                            )
-                            AboutSection(
-                                modifier =
-                                    Modifier.onGloballyPositioned { coordinates ->
-                                        val pos = coordinates.positionInParent().y.toInt()
-                                        appState.navigation.sectionPositions["about"] = maxOf(0, pos)
-                                    },
-                            )
-                            ShowcaseSection(
-                                modifier =
-                                    Modifier.onGloballyPositioned { coordinates ->
-                                        val pos = coordinates.positionInParent().y.toInt()
-                                        appState.navigation.sectionPositions["showcase"] = maxOf(0, pos)
-                                    },
-                            )
-                            ContactSection(
-                                modifier =
-                                    Modifier.onGloballyPositioned { coordinates ->
-                                        val pos = coordinates.positionInParent().y.toInt()
-                                        appState.navigation.sectionPositions["contact"] = maxOf(0, pos)
-                                    },
-                            )
-                            Footer()
-                        }
-                    }
-                }
-            } else {
-                Scaffold(
-                    topBar = {
-                        DesktopHeader(onNavigate = appState.navigation::navigate)
-                    },
-                    snackbarHost = { SnackbarHost(appState.navigation.snackbarHostState) },
-                ) { padding ->
-                    Column(
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .padding(padding)
-                                .verticalScroll(appState.navigation.scrollState),
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                    NavigationDrawerItem(
+                        label = { Text("About") },
+                        selected = false,
+                        onClick = {
+                            appState.navigation.scope.launch { appState.navigation.drawerState.close() }
+                            appState.navigation.navigate("about")
+                        },
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                    NavigationDrawerItem(
+                        label = { Text("Showcase") },
+                        selected = false,
+                        onClick = {
+                            appState.navigation.scope.launch { appState.navigation.drawerState.close() }
+                            appState.navigation.navigate("showcase")
+                        },
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                    NavigationDrawerItem(
+                        label = { Text("Contact") },
+                        selected = false,
+                        onClick = {
+                            appState.navigation.scope.launch { appState.navigation.drawerState.close() }
+                            appState.navigation.navigate("contact")
+                        },
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.CenterEnd,
                     ) {
-                        HomeSection(
-                            onNavigate = appState.navigation::navigate,
-                            topPadding = padding.calculateTopPadding(),
-                            modifier =
-                                Modifier.onGloballyPositioned { coordinates ->
-                                    val pos = coordinates.positionInParent().y.toInt()
-                                    appState.navigation.sectionPositions["home"] = maxOf(0, pos)
-                                },
-                        )
-                        AboutSection(
-                            modifier =
-                                Modifier.onGloballyPositioned { coordinates ->
-                                    val pos = coordinates.positionInParent().y.toInt()
-                                    appState.navigation.sectionPositions["about"] = maxOf(0, pos)
-                                },
-                        )
-                        ShowcaseSection(
-                            modifier =
-                                Modifier.onGloballyPositioned { coordinates ->
-                                    val pos = coordinates.positionInParent().y.toInt()
-                                    appState.navigation.sectionPositions["showcase"] = maxOf(0, pos)
-                                },
-                        )
-                        ContactSection(
-                            modifier =
-                                Modifier.onGloballyPositioned { coordinates ->
-                                    val pos = coordinates.positionInParent().y.toInt()
-                                    appState.navigation.sectionPositions["contact"] = maxOf(0, pos)
-                                },
-                        )
-                        Footer()
+                        IconToggleButton(
+                            checked = appState.theme.isDarkTheme,
+                            onCheckedChange = { appState.theme.isDarkTheme = it },
+                        ) {
+                            Icon(
+                                imageVector =
+                                    if (appState.theme.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                                contentDescription = "Toggle theme",
+                            )
+                        }
                     }
                 }
             }
+        },
+    ) {
+        Scaffold(
+            topBar = {
+                MobileHeader(
+                    onMenuOpen = { appState.navigation.scope.launch { appState.navigation.drawerState.open() } },
+                )
+            },
+            snackbarHost = { SnackbarHost(appState.navigation.snackbarHostState) },
+        ) { padding ->
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .verticalScroll(appState.navigation.scrollState),
+            ) {
+                HomeSection(
+                    onNavigate = appState.navigation::navigate,
+                    topPadding = padding.calculateTopPadding(),
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = coordinates.positionInParent().y.toInt()
+                            appState.navigation.sectionPositions["home"] = maxOf(0, pos)
+                        },
+                )
+                AboutSection(
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = coordinates.positionInParent().y.toInt()
+                            appState.navigation.sectionPositions["about"] = maxOf(0, pos)
+                        },
+                )
+                ShowcaseSection(
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = coordinates.positionInParent().y.toInt()
+                            appState.navigation.sectionPositions["showcase"] = maxOf(0, pos)
+                        },
+                )
+                ContactSection(
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = coordinates.positionInParent().y.toInt()
+                            appState.navigation.sectionPositions["contact"] = maxOf(0, pos)
+                        },
+                )
+                Footer()
+            }
+        }
+    }
+}
+
+@Composable
+fun DesktopLayout() {
+    val appState = LocalAppState.current
+
+    Scaffold(
+        topBar = {
+            DesktopHeader(onNavigate = appState.navigation::navigate)
+        },
+        snackbarHost = { SnackbarHost(appState.navigation.snackbarHostState) },
+    ) { padding ->
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .verticalScroll(appState.navigation.scrollState),
+        ) {
+            HomeSection(
+                onNavigate = appState.navigation::navigate,
+                topPadding = padding.calculateTopPadding(),
+                modifier =
+                    Modifier.onGloballyPositioned { coordinates ->
+                        val pos = coordinates.positionInParent().y.toInt()
+                        appState.navigation.sectionPositions["home"] = maxOf(0, pos)
+                    },
+            )
+            AboutSection(
+                modifier =
+                    Modifier.onGloballyPositioned { coordinates ->
+                        val pos = coordinates.positionInParent().y.toInt()
+                        appState.navigation.sectionPositions["about"] = maxOf(0, pos)
+                    },
+            )
+            ShowcaseSection(
+                modifier =
+                    Modifier.onGloballyPositioned { coordinates ->
+                        val pos = coordinates.positionInParent().y.toInt()
+                        appState.navigation.sectionPositions["showcase"] = maxOf(0, pos)
+                    },
+            )
+            ContactSection(
+                modifier =
+                    Modifier.onGloballyPositioned { coordinates ->
+                        val pos = coordinates.positionInParent().y.toInt()
+                        appState.navigation.sectionPositions["contact"] = maxOf(0, pos)
+                    },
+            )
+            Footer()
         }
     }
 }
