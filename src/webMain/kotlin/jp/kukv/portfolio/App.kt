@@ -31,18 +31,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -51,6 +56,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,7 +72,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.SpanStyle
@@ -98,70 +104,193 @@ fun App() {
     val scope = rememberCoroutineScope()
     val sectionPositions = remember { mutableStateMapOf<String, Int>() }
     val snackbarHostState = remember { SnackbarHostState() }
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    val windowInfo = LocalWindowInfo.current
+    val windowWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
+    val isMobile = windowWidth < 600.dp
 
     AppTheme(isDarkTheme = isDarkTheme) {
-        Scaffold(
-            topBar = {
-                Header(
-                    isDarkTheme = isDarkTheme,
-                    onThemeChange = { isDarkTheme = it },
-                    onNavigate = { section ->
-                        scope.launch {
-                            val pos = sectionPositions[section] ?: 0
-                            scrollState.animateScrollTo(pos)
-                        }
-                    },
-                )
-            },
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-        ) { padding ->
-            val density = LocalDensity.current
-            val topPaddingPx = with(density) { padding.calculateTopPadding().toPx() }
+        val navigate: (String) -> Unit = { section ->
+            scope.launch {
+                val pos = sectionPositions[section] ?: 0
+                scrollState.animateScrollTo(pos)
+            }
+        }
 
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .verticalScroll(scrollState),
-            ) {
-                HomeSection(
-                    onNavigate = { section ->
-                        scope.launch {
-                            val pos = sectionPositions[section] ?: 0
-                            scrollState.animateScrollTo(pos)
+        if (isMobile) {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    Surface(
+                        modifier = Modifier.fillMaxHeight().width(280.dp),
+                        color = MaterialTheme.colorScheme.surface,
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxSize().padding(vertical = 16.dp),
+                        ) {
+                            Text(
+                                "Portfolio",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            NavigationDrawerItem(
+                                label = { Text("Home") },
+                                selected = false,
+                                onClick = {
+                                    scope.launch { drawerState.close() }
+                                    navigate("home")
+                                },
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                            )
+                            NavigationDrawerItem(
+                                label = { Text("About") },
+                                selected = false,
+                                onClick = {
+                                    scope.launch { drawerState.close() }
+                                    navigate("about")
+                                },
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                            )
+                            NavigationDrawerItem(
+                                label = { Text("Showcase") },
+                                selected = false,
+                                onClick = {
+                                    scope.launch { drawerState.close() }
+                                    navigate("showcase")
+                                },
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                            )
+                            NavigationDrawerItem(
+                                label = { Text("Contact") },
+                                selected = false,
+                                onClick = {
+                                    scope.launch { drawerState.close() }
+                                    navigate("contact")
+                                },
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Box(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                                contentAlignment = Alignment.CenterEnd,
+                            ) {
+                                IconToggleButton(
+                                    checked = isDarkTheme,
+                                    onCheckedChange = { isDarkTheme = it },
+                                ) {
+                                    Icon(
+                                        imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                                        contentDescription = "Toggle theme",
+                                    )
+                                }
+                            }
                         }
+                    }
+                },
+            ) {
+                Scaffold(
+                    topBar = {
+                        MobileHeader(
+                            onMenuOpen = { scope.launch { drawerState.open() } },
+                        )
                     },
-                    topPadding = padding.calculateTopPadding(),
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                ) { padding ->
+                    Column(
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(padding)
+                                .verticalScroll(scrollState),
+                    ) {
+                        HomeSection(
+                            onNavigate = navigate,
+                            topPadding = padding.calculateTopPadding(),
+                            modifier =
+                                Modifier.onGloballyPositioned { coordinates ->
+                                    val pos = coordinates.positionInParent().y.toInt()
+                                    sectionPositions["home"] = maxOf(0, pos)
+                                },
+                        )
+                        AboutSection(
+                            modifier =
+                                Modifier.onGloballyPositioned { coordinates ->
+                                    val pos = coordinates.positionInParent().y.toInt()
+                                    sectionPositions["about"] = maxOf(0, pos)
+                                },
+                        )
+                        ShowcaseSection(
+                            modifier =
+                                Modifier.onGloballyPositioned { coordinates ->
+                                    val pos = coordinates.positionInParent().y.toInt()
+                                    sectionPositions["showcase"] = maxOf(0, pos)
+                                },
+                        )
+                        ContactSection(
+                            snackbarHostState = snackbarHostState,
+                            modifier =
+                                Modifier.onGloballyPositioned { coordinates ->
+                                    val pos = coordinates.positionInParent().y.toInt()
+                                    sectionPositions["contact"] = maxOf(0, pos)
+                                },
+                        )
+                        Footer()
+                    }
+                }
+            }
+        } else {
+            Scaffold(
+                topBar = {
+                    DesktopHeader(
+                        isDarkTheme = isDarkTheme,
+                        onThemeChange = { isDarkTheme = it },
+                        onNavigate = navigate,
+                    )
+                },
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+            ) { padding ->
+                Column(
                     modifier =
-                        Modifier.onGloballyPositioned { coordinates ->
-                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                            sectionPositions["home"] = maxOf(0, pos)
-                        },
-                )
-                AboutSection(
-                    modifier =
-                        Modifier.onGloballyPositioned { coordinates ->
-                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                            sectionPositions["about"] = maxOf(0, pos)
-                        },
-                )
-                ShowcaseSection(
-                    modifier =
-                        Modifier.onGloballyPositioned { coordinates ->
-                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                            sectionPositions["showcase"] = maxOf(0, pos)
-                        },
-                )
-                ContactSection(
-                    snackbarHostState = snackbarHostState,
-                    modifier =
-                        Modifier.onGloballyPositioned { coordinates ->
-                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                            sectionPositions["contact"] = maxOf(0, pos)
-                        },
-                )
-                Footer()
+                        Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                            .verticalScroll(scrollState),
+                ) {
+                    HomeSection(
+                        onNavigate = navigate,
+                        topPadding = padding.calculateTopPadding(),
+                        modifier =
+                            Modifier.onGloballyPositioned { coordinates ->
+                                val pos = coordinates.positionInParent().y.toInt()
+                                sectionPositions["home"] = maxOf(0, pos)
+                            },
+                    )
+                    AboutSection(
+                        modifier =
+                            Modifier.onGloballyPositioned { coordinates ->
+                                val pos = coordinates.positionInParent().y.toInt()
+                                sectionPositions["about"] = maxOf(0, pos)
+                            },
+                    )
+                    ShowcaseSection(
+                        modifier =
+                            Modifier.onGloballyPositioned { coordinates ->
+                                val pos = coordinates.positionInParent().y.toInt()
+                                sectionPositions["showcase"] = maxOf(0, pos)
+                            },
+                    )
+                    ContactSection(
+                        snackbarHostState = snackbarHostState,
+                        modifier =
+                            Modifier.onGloballyPositioned { coordinates ->
+                                val pos = coordinates.positionInParent().y.toInt()
+                                sectionPositions["contact"] = maxOf(0, pos)
+                            },
+                    )
+                    Footer()
+                }
             }
         }
     }
@@ -174,7 +303,10 @@ fun HomeSection(
     modifier: Modifier = Modifier,
 ) {
     val windowInfo = LocalWindowInfo.current
+    val windowWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
     val windowHeight = with(LocalDensity.current) { windowInfo.containerSize.height.toDp() }
+    val isMobile = windowWidth < 600.dp
+    val isTablet = windowWidth in 600.dp..893.dp
     val sectionHeight = windowHeight - topPadding
     Box(
         modifier =
@@ -184,51 +316,147 @@ fun HomeSection(
                 .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Row(
-            modifier = Modifier.widthIn(max = 1000.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(64.dp, Alignment.CenterHorizontally),
-        ) {
+        if (isMobile) {
             Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.widthIn(max = 1000.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
             ) {
-                StatusPill()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text =
-                        buildAnnotatedString {
-                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.secondary)) {
-                                append("Hi, I'm ")
-                            }
-                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                                append("Nonaka koki")
-                            }
-                        },
-                    style = MaterialTheme.typography.displayMedium,
-                    fontWeight = FontWeight.Bold,
+                Image(
+                    painter = painterResource(Res.drawable.profile),
+                    contentDescription = "Profile Image",
+                    modifier =
+                        Modifier
+                            .size(180.dp)
+                            .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "and I'm a Software enggner",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-                Button(onClick = { onNavigate("showcase") }) {
-                    Text("Showcase")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    StatusPill()
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text =
+                            buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.secondary)) {
+                                    append("Hi, I'm ")
+                                }
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                                    append("Nonaka koki")
+                                }
+                            },
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "and I'm a Software enggner",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.secondary,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Button(onClick = { onNavigate("showcase") }) {
+                        Text("Showcase")
+                    }
                 }
             }
+        } else if (isTablet) {
+            Column(
+                modifier = Modifier.widthIn(max = 1000.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.profile),
+                    contentDescription = "Profile Image",
+                    modifier =
+                        Modifier
+                            .size(180.dp)
+                            .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    StatusPill()
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text =
+                            buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.secondary)) {
+                                    append("Hi, I'm ")
+                                }
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                                    append("Nonaka koki")
+                                }
+                            },
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "and I'm a Software enggner",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.secondary,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Button(onClick = { onNavigate("showcase") }) {
+                        Text("Showcase")
+                    }
+                }
+            }
+        } else {
+            Row(
+                modifier = Modifier.widthIn(max = 1000.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(64.dp, Alignment.CenterHorizontally),
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    StatusPill()
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text =
+                            buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.secondary)) {
+                                    append("Hi, I'm ")
+                                }
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                                    append("Nonaka koki")
+                                }
+                            },
+                        style = MaterialTheme.typography.displayMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "and I'm a Software enggner",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Button(onClick = { onNavigate("showcase") }) {
+                        Text("Showcase")
+                    }
+                }
 
-            Image(
-                painter = painterResource(Res.drawable.profile),
-                contentDescription = "Profile Image",
-                modifier =
-                    Modifier
-                        .size(300.dp)
-                        .clip(CircleShape),
-                contentScale = ContentScale.Crop,
-            )
+                Image(
+                    painter = painterResource(Res.drawable.profile),
+                    contentDescription = "Profile Image",
+                    modifier =
+                        Modifier
+                            .size(300.dp)
+                            .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
+            }
         }
     }
 }
@@ -236,6 +464,10 @@ fun HomeSection(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutSection(modifier: Modifier = Modifier) {
+    val windowInfo = LocalWindowInfo.current
+    val windowWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
+    val isMobile = windowWidth < 600.dp
+    val isTablet = windowWidth in 600.dp..893.dp
     val skillCategories =
         remember {
             listOf(
@@ -321,38 +553,130 @@ fun AboutSection(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Row(
-            modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            skillCategories.forEach { category ->
-                Surface(
-                    modifier = Modifier.weight(1f),
-                    shape = MaterialTheme.shapes.medium,
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        Text(
-                            text = category.label,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            category.skills.forEach { skill ->
-                                Surface(
-                                    shape = MaterialTheme.shapes.small,
-                                    color = MaterialTheme.colorScheme.surface,
-                                ) {
+        if (isMobile) {
+            Column(
+                modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                skillCategories.forEach { category ->
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                    ) {
+                        Column(modifier = Modifier.padding(20.dp)) {
+                            Text(
+                                text = category.label,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                category.skills.forEach { skill ->
+                                    Surface(
+                                        shape = MaterialTheme.shapes.small,
+                                        color = MaterialTheme.colorScheme.surface,
+                                    ) {
+                                        Text(
+                                            text = skill,
+                                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                            style = MaterialTheme.typography.labelSmall,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (isTablet) {
+            Column(
+                modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                skillCategories.chunked(2).forEach { rowCategories ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        rowCategories.forEach { category ->
+                            Surface(
+                                modifier = Modifier.weight(1f),
+                                shape = MaterialTheme.shapes.medium,
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                            ) {
+                                Column(modifier = Modifier.padding(20.dp)) {
                                     Text(
-                                        text = skill,
-                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                        style = MaterialTheme.typography.labelSmall,
+                                        text = category.label,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        fontWeight = FontWeight.SemiBold,
                                     )
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    FlowRow(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    ) {
+                                        category.skills.forEach { skill ->
+                                            Surface(
+                                                shape = MaterialTheme.shapes.small,
+                                                color = MaterialTheme.colorScheme.surface,
+                                            ) {
+                                                Text(
+                                                    text = skill,
+                                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (rowCategories.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
+            }
+        } else {
+            Row(
+                modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                skillCategories.forEach { category ->
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = MaterialTheme.shapes.medium,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                    ) {
+                        Column(modifier = Modifier.padding(20.dp)) {
+                            Text(
+                                text = category.label,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                category.skills.forEach { skill ->
+                                    Surface(
+                                        shape = MaterialTheme.shapes.small,
+                                        color = MaterialTheme.colorScheme.surface,
+                                    ) {
+                                        Text(
+                                            text = skill,
+                                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                            style = MaterialTheme.typography.labelSmall,
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -488,6 +812,10 @@ data class Project(
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ShowcaseSection(modifier: Modifier = Modifier) {
+    val windowInfo = LocalWindowInfo.current
+    val windowWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
+    val isMobile = windowWidth < 600.dp
+    val isTablet = windowWidth in 600.dp..893.dp
     val projects =
         remember {
             listOf(
@@ -679,10 +1007,17 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
         }
 
         FlowRow(
-            modifier = Modifier.widthIn(max = 1300.dp), // Increased slightly to accommodate wider cards
+            modifier = Modifier.widthIn(max = 1300.dp),
             horizontalArrangement = Arrangement.Start,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            maxItemsInEachRow = 4,
+            maxItemsInEachRow =
+                if (isMobile) {
+                    1
+                } else if (isTablet) {
+                    2
+                } else {
+                    4
+                },
         ) {
             itemsToShow.forEachIndexed { index, project ->
                 key(project?.name ?: "coming-soon-$index") {
@@ -700,6 +1035,8 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
                         ProjectCard(
                             project = project,
                             onClick = { selectedProject = it },
+                            isMobile = isMobile,
+                            isTablet = isTablet,
                         )
                     }
                 }
@@ -727,12 +1064,30 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
 fun ProjectCard(
     project: Project?,
     onClick: (Project) -> Unit,
+    isMobile: Boolean = false,
+    isTablet: Boolean = false,
 ) {
+    val cardWidth =
+        if (isMobile) {
+            300.dp
+        } else if (isTablet) {
+            300.dp
+        } else {
+            300.dp
+        }
+    val cardHeight =
+        if (isMobile) {
+            200.dp
+        } else if (isTablet) {
+            240.dp
+        } else {
+            280.dp
+        }
     Card(
         modifier =
             Modifier
                 .padding(8.dp)
-                .size(width = 300.dp, height = 280.dp),
+                .size(width = cardWidth, height = cardHeight),
         onClick = { project?.let { onClick(it) } },
         enabled = project != null,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -811,6 +1166,10 @@ fun ContactSection(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
+    val windowInfo = LocalWindowInfo.current
+    val windowWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
+    val isMobile = windowWidth < 600.dp
+    val isTablet = windowWidth in 600.dp..893.dp
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var company by remember { mutableStateOf("") }
@@ -870,15 +1229,12 @@ fun ContactSection(
                 modifier = Modifier.padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
+                if (isMobile) {
                     OutlinedTextField(
                         value = firstName,
                         onValueChange = { firstName = it },
                         label = { Text("First name*") },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(),
                         isError = firstName.isNotEmpty() && !isFirstNameValid,
                         supportingText = {
                             if (firstName.isNotEmpty() && !isFirstNameValid) {
@@ -893,7 +1249,7 @@ fun ContactSection(
                         value = lastName,
                         onValueChange = { lastName = it },
                         label = { Text("Last name*") },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(),
                         isError = lastName.isNotEmpty() && !isLastNameValid,
                         supportingText = {
                             if (lastName.isNotEmpty() && !isLastNameValid) {
@@ -904,6 +1260,42 @@ fun ContactSection(
                             }
                         },
                     )
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        OutlinedTextField(
+                            value = firstName,
+                            onValueChange = { firstName = it },
+                            label = { Text("First name*") },
+                            modifier = Modifier.weight(1f),
+                            isError = firstName.isNotEmpty() && !isFirstNameValid,
+                            supportingText = {
+                                if (firstName.isNotEmpty() && !isFirstNameValid) {
+                                    Text(
+                                        if (firstName.isBlank()) "Required" else "Max 100 characters",
+                                        color = MaterialTheme.colorScheme.error,
+                                    )
+                                }
+                            },
+                        )
+                        OutlinedTextField(
+                            value = lastName,
+                            onValueChange = { lastName = it },
+                            label = { Text("Last name*") },
+                            modifier = Modifier.weight(1f),
+                            isError = lastName.isNotEmpty() && !isLastNameValid,
+                            supportingText = {
+                                if (lastName.isNotEmpty() && !isLastNameValid) {
+                                    Text(
+                                        if (lastName.isBlank()) "Required" else "Max 100 characters",
+                                        color = MaterialTheme.colorScheme.error,
+                                    )
+                                }
+                            },
+                        )
+                    }
                 }
 
                 OutlinedTextField(
@@ -1104,11 +1496,45 @@ fun CopyRights() {
 }
 
 @Composable
-fun Header(
+fun MobileHeader(onMenuOpen: () -> Unit) {
+    Surface(
+        shadowElevation = 4.dp,
+        color = MaterialTheme.colorScheme.surface,
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            IconButton(
+                onClick = onMenuOpen,
+                modifier = Modifier.align(Alignment.CenterStart),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Menu",
+                )
+            }
+            Text(
+                "Portfolio",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
+    }
+}
+
+@Composable
+fun DesktopHeader(
     isDarkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit,
     onNavigate: (String) -> Unit,
 ) {
+    val windowInfo = LocalWindowInfo.current
+    val windowWidth = with(LocalDensity.current) { windowInfo.containerSize.width.toDp() }
+    val isTablet = windowWidth < 893.dp
+
     Surface(
         shadowElevation = 4.dp,
         color = MaterialTheme.colorScheme.surface,
@@ -1123,9 +1549,7 @@ fun Header(
             Text(
                 "Portfolio",
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.weight(1f),
             )
-
             Row(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.Center,
@@ -1135,8 +1559,19 @@ fun Header(
                 TextButton(onClick = { onNavigate("showcase") }) { Text("Showcase") }
                 TextButton(onClick = { onNavigate("contact") }) { Text("Contact") }
             }
-
-            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
+            if (!isTablet) {
+                Box(modifier = Modifier.widthIn(min = 48.dp), contentAlignment = Alignment.CenterEnd) {
+                    IconToggleButton(
+                        checked = isDarkTheme,
+                        onCheckedChange = onThemeChange,
+                    ) {
+                        Icon(
+                            imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                            contentDescription = "Toggle theme",
+                        )
+                    }
+                }
+            } else {
                 IconToggleButton(
                     checked = isDarkTheme,
                     onCheckedChange = onThemeChange,
