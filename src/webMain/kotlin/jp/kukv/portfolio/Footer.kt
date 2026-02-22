@@ -48,7 +48,11 @@ fun Footer() {
     }
 }
 
-private enum class SocialLink(val serviceName: String, val url: String, val socialIcon: SocialLinkIcon) {
+private enum class SocialLink(
+    val serviceName: String,
+    val url: String,
+    val socialIcon: SocialLinkIcon,
+) {
     X("X", "https://x.com/kukv", SocialLinkIcon.X),
     Facebook("Facebook", "https://www.facebook.com/04x17", SocialLinkIcon.Facebook),
     Instagram("Instagram", "https://www.instagram.com/kukv", SocialLinkIcon.Instagram),
@@ -64,13 +68,14 @@ private enum class SocialLinkIcon(val logo: DrawableResource, val size: Dp = 520
     Github(Res.drawable.github),
 }
 
-private val socialLinks = listOf(
-    SocialLink.X,
-    SocialLink.Facebook,
-    SocialLink.Instagram,
-    SocialLink.Bluesky,
-    SocialLink.Github
-)
+private val socialLinks =
+    listOf(
+        SocialLink.X,
+        SocialLink.Facebook,
+        SocialLink.Instagram,
+        SocialLink.Bluesky,
+        SocialLink.Github,
+    )
 
 @Composable
 fun SocialLinks() {

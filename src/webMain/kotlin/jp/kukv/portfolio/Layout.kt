@@ -50,36 +50,41 @@ private fun MainContent(padding: PaddingValues) {
     val appState = LocalAppState.current
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)
-            .verticalScroll(appState.navigation.scrollState),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(appState.navigation.scrollState),
     ) {
         HomeSection(
             onNavigate = appState.navigation::navigate,
             topPadding = padding.calculateTopPadding(),
-            modifier = Modifier.onGloballyPositioned { coordinates ->
-                val pos = coordinates.positionInParent().y.toInt()
-                appState.navigation.sectionPositions["home"] = maxOf(0, pos)
-            },
+            modifier =
+                Modifier.onGloballyPositioned { coordinates ->
+                    val pos = coordinates.positionInParent().y.toInt()
+                    appState.navigation.sectionPositions["home"] = maxOf(0, pos)
+                },
         )
         AboutSection(
-            modifier = Modifier.onGloballyPositioned { coordinates ->
-                val pos = coordinates.positionInParent().y.toInt()
-                appState.navigation.sectionPositions["about"] = maxOf(0, pos)
-            },
+            modifier =
+                Modifier.onGloballyPositioned { coordinates ->
+                    val pos = coordinates.positionInParent().y.toInt()
+                    appState.navigation.sectionPositions["about"] = maxOf(0, pos)
+                },
         )
         ShowcaseSection(
-            modifier = Modifier.onGloballyPositioned { coordinates ->
-                val pos = coordinates.positionInParent().y.toInt()
-                appState.navigation.sectionPositions["showcase"] = maxOf(0, pos)
-            },
+            modifier =
+                Modifier.onGloballyPositioned { coordinates ->
+                    val pos = coordinates.positionInParent().y.toInt()
+                    appState.navigation.sectionPositions["showcase"] = maxOf(0, pos)
+                },
         )
         ContactSection(
-            modifier = Modifier.onGloballyPositioned { coordinates ->
-                val pos = coordinates.positionInParent().y.toInt()
-                appState.navigation.sectionPositions["contact"] = maxOf(0, pos)
-            },
+            modifier =
+                Modifier.onGloballyPositioned { coordinates ->
+                    val pos = coordinates.positionInParent().y.toInt()
+                    appState.navigation.sectionPositions["contact"] = maxOf(0, pos)
+                },
         )
         Footer()
     }
