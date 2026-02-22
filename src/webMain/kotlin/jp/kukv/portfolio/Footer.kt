@@ -48,62 +48,38 @@ fun Footer() {
     }
 }
 
-data class SocialLink(
-    val name: String,
-    val url: String,
-    val socialIcon: SocialLinkIcon,
+private enum class SocialLink(val serviceName: String, val url: String, val socialIcon: SocialLinkIcon) {
+    X("X", "https://x.com/kukv", SocialLinkIcon.X),
+    Facebook("Facebook", "https://www.facebook.com/04x17", SocialLinkIcon.Facebook),
+    Instagram("Instagram", "https://www.instagram.com/kukv", SocialLinkIcon.Instagram),
+    Bluesky("BlueSky", "https://bsky.app/profile/kukv.jp", SocialLinkIcon.Bluesky),
+    Github("GitHub", "https://github.com/kukv", SocialLinkIcon.Github),
+}
+
+private enum class SocialLinkIcon(val logo: DrawableResource, val size: Dp = 520.dp) {
+    X(Res.drawable.x),
+    Facebook(Res.drawable.facebook),
+    Instagram(Res.drawable.instagram),
+    Bluesky(Res.drawable.bluesky),
+    Github(Res.drawable.github),
+}
+
+private val socialLinks = listOf(
+    SocialLink.X,
+    SocialLink.Facebook,
+    SocialLink.Instagram,
+    SocialLink.Bluesky,
+    SocialLink.Github
 )
 
-data class SocialLinkIcon(val logo: DrawableResource, val size: Dp = 520.dp)
-
 @Composable
-fun SocialLinks(
-    socialLinks: List<SocialLink> =
-        listOf(
-            SocialLink(
-                "X",
-                "https://x.com/kukv",
-                SocialLinkIcon(
-                    Res.drawable.x,
-                ),
-            ),
-            SocialLink(
-                "Facebook",
-                "https://www.facebook.com/04x17",
-                SocialLinkIcon(
-                    Res.drawable.facebook,
-                ),
-            ),
-            SocialLink(
-                "Instagram",
-                "https://www.instagram.com/kukv",
-                SocialLinkIcon(
-                    Res.drawable.instagram,
-                ),
-            ),
-            SocialLink(
-                "BlueSky",
-                "https://bsky.app/profile/kukv.jp",
-                SocialLinkIcon(
-                    Res.drawable.bluesky,
-                ),
-            ),
-            SocialLink(
-                "GitHub",
-                "https://github.com/kukv",
-                SocialLinkIcon(
-                    Res.drawable.github,
-                ),
-            ),
-        ),
-) {
+fun SocialLinks() {
     socialLinks.forEach { link ->
-
         val socialLinkIcon = link.socialIcon
         IconButton(onClick = { openUrl(link.url) }) {
             Icon(
                 painter = painterResource(socialLinkIcon.logo),
-                contentDescription = link.name,
+                contentDescription = link.serviceName,
                 modifier = Modifier.size(socialLinkIcon.size),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
