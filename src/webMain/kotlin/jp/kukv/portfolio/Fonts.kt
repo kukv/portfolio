@@ -42,7 +42,6 @@ fun PortfolioTypography(): Typography {
 
 private fun TextStyle.withFont(fontFamily: FontFamily): TextStyle = copy(fontFamily = fontFamily)
 
-
 @Composable
 fun NotoSansJpFamily(): FontFamily =
     FontFamily(

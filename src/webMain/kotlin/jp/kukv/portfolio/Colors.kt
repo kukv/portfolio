@@ -30,7 +30,6 @@ val VariantGrey60 = Color(0xFF857373)
 val VariantGrey80 = Color(0xFFD8C2C2)
 val VariantGrey90 = Color(0xFFF4DDDD)
 
-
 val WineBaseLightColorScheme =
     lightColorScheme(
         primary = WineRed40,
