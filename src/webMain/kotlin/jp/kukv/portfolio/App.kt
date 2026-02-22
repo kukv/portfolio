@@ -16,12 +16,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -64,11 +64,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -133,29 +133,33 @@ fun App() {
                         }
                     },
                     topPadding = padding.calculateTopPadding(),
-                    modifier = Modifier.onGloballyPositioned { coordinates ->
-                        val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                        sectionPositions["home"] = maxOf(0, pos)
-                    },
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["home"] = maxOf(0, pos)
+                        },
                 )
                 AboutSection(
-                    modifier = Modifier.onGloballyPositioned { coordinates ->
-                        val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                        sectionPositions["about"] = maxOf(0, pos)
-                    },
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["about"] = maxOf(0, pos)
+                        },
                 )
                 ShowcaseSection(
-                    modifier = Modifier.onGloballyPositioned { coordinates ->
-                        val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                        sectionPositions["showcase"] = maxOf(0, pos)
-                    },
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["showcase"] = maxOf(0, pos)
+                        },
                 )
                 ContactSection(
                     snackbarHostState = snackbarHostState,
-                    modifier = Modifier.onGloballyPositioned { coordinates ->
-                        val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
-                        sectionPositions["contact"] = maxOf(0, pos)
-                    },
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["contact"] = maxOf(0, pos)
+                        },
                 )
                 Footer()
             }
@@ -257,19 +261,25 @@ fun AboutSection(modifier: Modifier = Modifier) {
                     period = "2022.04 — Present",
                     role = "Senior Software Engineer",
                     company = "Kotlin Corp",
-                    description = "Leading development of KMP-based cross-platform products. Improved build performance by 40% through Gradle modularization and introduced Compose Multiplatform for web deployment.",
+                    description =
+                        "Leading development of KMP-based cross-platform products. " +
+                            "Improved build performance by 40% through Gradle modularization and introduced Compose Multiplatform for web deployment.",
                 ),
                 Experience(
                     period = "2020.04 — 2022.03",
                     role = "Software Engineer",
                     company = "Mobile Solutions Inc.",
-                    description = "Developed Android apps with Kotlin and Jetpack Compose. Delivered 10+ client applications with high performance and maintainability standards.",
+                    description =
+                        "Developed Android apps with Kotlin and Jetpack Compose. " +
+                            "Delivered 10+ client applications with high performance and maintainability standards.",
                 ),
                 Experience(
                     period = "2018.04 — 2020.03",
                     role = "Junior Engineer",
                     company = "Digital Lab LLC",
-                    description = "Worked on native Android and server-side Kotlin projects. Gained experience with REST API design and Kotlin coroutines.",
+                    description =
+                        "Worked on native Android and server-side Kotlin projects. " +
+                            "Gained experience with REST API design and Kotlin coroutines.",
                 ),
             )
         }
@@ -442,8 +452,7 @@ fun StatusPill() {
                     width = 1.dp,
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                     shape = CircleShape,
-                )
-                .padding(horizontal = 12.dp, vertical = 6.dp),
+                ).padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -464,10 +473,7 @@ fun StatusPill() {
     }
 }
 
-data class SkillCategory(
-    val label: String,
-    val skills: List<String>,
-)
+data class SkillCategory(val label: String, val skills: List<String>)
 
 data class Project(
     val name: String,
@@ -801,7 +807,10 @@ data class Experience(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactSection(snackbarHostState: SnackbarHostState, modifier: Modifier = Modifier) {
+fun ContactSection(
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var company by remember { mutableStateOf("") }
