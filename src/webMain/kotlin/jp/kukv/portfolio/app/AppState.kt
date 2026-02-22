@@ -1,4 +1,4 @@
-package jp.kukv.portfolio
+package jp.kukv.portfolio.app
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState

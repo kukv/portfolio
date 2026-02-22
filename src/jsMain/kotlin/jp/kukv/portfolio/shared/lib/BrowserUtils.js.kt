@@ -1,4 +1,4 @@
-package jp.kukv.portfolio
+package jp.kukv.portfolio.shared.lib
 
 import kotlinx.browser.window
 

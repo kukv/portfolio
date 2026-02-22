@@ -1,4 +1,4 @@
-package jp.kukv.portfolio
+package jp.kukv.portfolio.screens.about
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import jp.kukv.portfolio.app.LocalAppState
 import kotlin.collections.chunked
 import kotlin.collections.forEach
 

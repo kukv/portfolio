@@ -1,4 +1,4 @@
-package jp.kukv.portfolio
+package jp.kukv.portfolio.screens.contact
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import jp.kukv.portfolio.app.LocalAppState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

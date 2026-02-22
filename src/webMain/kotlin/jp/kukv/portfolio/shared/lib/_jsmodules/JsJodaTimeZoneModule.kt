@@ -1,4 +1,4 @@
-package jp.kukv.portfolio._jsmodules
+package jp.kukv.portfolio.shared.lib._jsmodules
 
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlin.js.JsModule

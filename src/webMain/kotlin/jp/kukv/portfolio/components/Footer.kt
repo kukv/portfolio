@@ -1,4 +1,4 @@
-package jp.kukv.portfolio
+package jp.kukv.portfolio.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio._extensions.kotlinx.datetime.now
+import jp.kukv.portfolio.shared.lib._extensions.kotlinx.datetime.now
+import jp.kukv.portfolio.shared.lib.openUrl
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource

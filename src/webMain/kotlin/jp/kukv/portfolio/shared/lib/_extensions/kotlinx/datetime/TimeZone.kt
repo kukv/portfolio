@@ -1,4 +1,4 @@
-package jp.kukv.portfolio._extensions.kotlinx.datetime
+package jp.kukv.portfolio.shared.lib._extensions.kotlinx.datetime
 
 import kotlinx.datetime.TimeZone
 
