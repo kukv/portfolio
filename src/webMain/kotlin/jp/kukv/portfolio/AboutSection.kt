@@ -38,59 +38,59 @@ data class Experience(
     val description: String,
 )
 
+private val skillCategories =
+    listOf(
+        SkillCategory(
+            "Languages / Core",
+            listOf("Kotlin", "Java", "Swift", "TypeScript"),
+        ),
+        SkillCategory(
+            "Multiplatform",
+            listOf("Kotlin Multiplatform", "Compose Multiplatform", "Compose Android", "Compose Web", "Ktor"),
+        ),
+        SkillCategory(
+            "Infra / Tools",
+            listOf("Android Studio", "Gradle", "GitHub Actions", "Docker", "Firebase", "PostgreSQL"),
+        ),
+    )
+
+private val experiences =
+    listOf(
+        Experience(
+            period = "2022.04 — Present",
+            role = "Senior Software Engineer",
+            company = "Kotlin Corp",
+            description =
+                "Leading development of KMP-based cross-platform products. " +
+                    "Improved build performance by 40% through Gradle modularization and introduced Compose Multiplatform for web deployment.",
+        ),
+        Experience(
+            period = "2020.04 — 2022.03",
+            role = "Software Engineer",
+            company = "Mobile Solutions Inc.",
+            description =
+                "Developed Android apps with Kotlin and Jetpack Compose. " +
+                    "Delivered 10+ client applications with high performance and maintainability standards.",
+        ),
+        Experience(
+            period = "2018.04 — 2020.03",
+            role = "Junior Engineer",
+            company = "Digital Lab LLC",
+            description =
+                "Worked on native Android and server-side Kotlin projects. " +
+                    "Gained experience with REST API design and Kotlin coroutines.",
+        ),
+    )
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutSection(modifier: Modifier = Modifier) {
     val appState = LocalAppState.current
     val isMobile = appState.windowSize.isMobile
     val isTablet = appState.windowSize.isTablet
-    val skillCategories =
-        remember {
-            listOf(
-                SkillCategory(
-                    "Languages / Core",
-                    listOf("Kotlin", "Java", "Swift", "TypeScript"),
-                ),
-                SkillCategory(
-                    "Multiplatform",
-                    listOf("Kotlin Multiplatform", "Compose Multiplatform", "Compose Android", "Compose Web", "Ktor"),
-                ),
-                SkillCategory(
-                    "Infra / Tools",
-                    listOf("Android Studio", "Gradle", "GitHub Actions", "Docker", "Firebase", "PostgreSQL"),
-                ),
-            )
-        }
 
-    val experiences =
-        remember {
-            listOf(
-                Experience(
-                    period = "2022.04 — Present",
-                    role = "Senior Software Engineer",
-                    company = "Kotlin Corp",
-                    description =
-                        "Leading development of KMP-based cross-platform products. " +
-                            "Improved build performance by 40% through Gradle modularization and introduced Compose Multiplatform for web deployment.",
-                ),
-                Experience(
-                    period = "2020.04 — 2022.03",
-                    role = "Software Engineer",
-                    company = "Mobile Solutions Inc.",
-                    description =
-                        "Developed Android apps with Kotlin and Jetpack Compose. " +
-                            "Delivered 10+ client applications with high performance and maintainability standards.",
-                ),
-                Experience(
-                    period = "2018.04 — 2020.03",
-                    role = "Junior Engineer",
-                    company = "Digital Lab LLC",
-                    description =
-                        "Worked on native Android and server-side Kotlin projects. " +
-                            "Gained experience with REST API design and Kotlin coroutines.",
-                ),
-            )
-        }
+    val skillCategories = remember { skillCategories }
+    val experiences = remember { experiences }
 
     Column(
         modifier =
