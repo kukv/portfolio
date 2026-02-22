@@ -2,3 +2,7 @@
 *.csv -text
 *.bat text eol=crlf
 *.jar binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
