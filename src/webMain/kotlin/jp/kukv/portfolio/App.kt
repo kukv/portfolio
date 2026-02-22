@@ -1,23 +1,31 @@
 package jp.kukv.portfolio
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -48,6 +56,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -56,6 +65,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -83,17 +96,7 @@ fun App() {
     var isDarkTheme by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
-
-    // Using a simple map to store section positions (mocking)
-    // In a real scenario we'd use layout coordinates
-    val sectionScrollTo =
-        mapOf(
-            "home" to 0,
-            "about" to 400,
-            "showcase" to 800,
-            "contact" to 2000,
-        )
-
+    val sectionPositions = remember { mutableStateMapOf<String, Int>() }
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppTheme(isDarkTheme = isDarkTheme) {
@@ -104,7 +107,7 @@ fun App() {
                     onThemeChange = { isDarkTheme = it },
                     onNavigate = { section ->
                         scope.launch {
-                            val pos = sectionScrollTo[section] ?: 0
+                            val pos = sectionPositions[section] ?: 0
                             scrollState.animateScrollTo(pos)
                         }
                     },
@@ -112,6 +115,9 @@ fun App() {
             },
             snackbarHost = { SnackbarHost(snackbarHostState) },
         ) { padding ->
+            val density = LocalDensity.current
+            val topPaddingPx = with(density) { padding.calculateTopPadding().toPx() }
+
             Column(
                 modifier =
                     Modifier
@@ -119,18 +125,42 @@ fun App() {
                         .padding(padding)
                         .verticalScroll(scrollState),
             ) {
-                // Sections
                 HomeSection(
                     onNavigate = { section ->
                         scope.launch {
-                            val pos = sectionScrollTo[section] ?: 0
+                            val pos = sectionPositions[section] ?: 0
                             scrollState.animateScrollTo(pos)
                         }
                     },
+                    topPadding = padding.calculateTopPadding(),
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["home"] = maxOf(0, pos)
+                        },
                 )
-                AboutSection()
-                ShowcaseSection()
-                ContactSection(snackbarHostState)
+                AboutSection(
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["about"] = maxOf(0, pos)
+                        },
+                )
+                ShowcaseSection(
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["showcase"] = maxOf(0, pos)
+                        },
+                )
+                ContactSection(
+                    snackbarHostState = snackbarHostState,
+                    modifier =
+                        Modifier.onGloballyPositioned { coordinates ->
+                            val pos = (coordinates.positionInRoot().y + scrollState.value - topPaddingPx).toInt()
+                            sectionPositions["contact"] = maxOf(0, pos)
+                        },
+                )
                 Footer()
             }
         }
@@ -138,12 +168,20 @@ fun App() {
 }
 
 @Composable
-fun HomeSection(onNavigate: (String) -> Unit) {
+fun HomeSection(
+    onNavigate: (String) -> Unit,
+    topPadding: Dp = 0.dp,
+    modifier: Modifier = Modifier,
+) {
+    val windowInfo = LocalWindowInfo.current
+    val windowHeight = with(LocalDensity.current) { windowInfo.containerSize.height.toDp() }
+    val sectionHeight = windowHeight - topPadding
     Box(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
-                .padding(vertical = 120.dp, horizontal = 16.dp),
+                .height(sectionHeight)
+                .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center,
     ) {
         Row(
@@ -155,6 +193,8 @@ fun HomeSection(onNavigate: (String) -> Unit) {
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.Start,
             ) {
+                StatusPill()
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text =
                         buildAnnotatedString {
@@ -193,15 +233,65 @@ fun HomeSection(onNavigate: (String) -> Unit) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AboutSection() {
+fun AboutSection(modifier: Modifier = Modifier) {
+    val skillCategories =
+        remember {
+            listOf(
+                SkillCategory(
+                    "Languages / Core",
+                    listOf("Kotlin", "Java", "Swift", "TypeScript"),
+                ),
+                SkillCategory(
+                    "Multiplatform",
+                    listOf("Kotlin Multiplatform", "Compose Multiplatform", "Compose Android", "Compose Web", "Ktor"),
+                ),
+                SkillCategory(
+                    "Infra / Tools",
+                    listOf("Android Studio", "Gradle", "GitHub Actions", "Docker", "Firebase", "PostgreSQL"),
+                ),
+            )
+        }
+
+    val experiences =
+        remember {
+            listOf(
+                Experience(
+                    period = "2022.04 — Present",
+                    role = "Senior Software Engineer",
+                    company = "Kotlin Corp",
+                    description =
+                        "Leading development of KMP-based cross-platform products. " +
+                            "Improved build performance by 40% through Gradle modularization and introduced Compose Multiplatform for web deployment.",
+                ),
+                Experience(
+                    period = "2020.04 — 2022.03",
+                    role = "Software Engineer",
+                    company = "Mobile Solutions Inc.",
+                    description =
+                        "Developed Android apps with Kotlin and Jetpack Compose. " +
+                            "Delivered 10+ client applications with high performance and maintainability standards.",
+                ),
+                Experience(
+                    period = "2018.04 — 2020.03",
+                    role = "Junior Engineer",
+                    company = "Digital Lab LLC",
+                    description =
+                        "Worked on native Android and server-side Kotlin projects. " +
+                            "Gained experience with REST API design and Kotlin coroutines.",
+                ),
+            )
+        }
+
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .padding(vertical = 60.dp, horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        // About Me
         Text(
             text = "About Me",
             style = MaterialTheme.typography.headlineLarge,
@@ -221,8 +311,169 @@ fun AboutSection() {
                 style = MaterialTheme.typography.bodyLarge,
             )
         }
+
+        Spacer(modifier = Modifier.height(60.dp))
+
+        // Skills & Stack
+        Text(
+            text = "Skills & Stack",
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Row(
+            modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            skillCategories.forEach { category ->
+                Surface(
+                    modifier = Modifier.weight(1f),
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Text(
+                            text = category.label,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            category.skills.forEach { skill ->
+                                Surface(
+                                    shape = MaterialTheme.shapes.small,
+                                    color = MaterialTheme.colorScheme.surface,
+                                ) {
+                                    Text(
+                                        text = skill,
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                        style = MaterialTheme.typography.labelSmall,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(60.dp))
+
+        // Experience
+        Text(
+            text = "Experience",
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Column(modifier = Modifier.widthIn(max = 800.dp).fillMaxWidth()) {
+            experiences.forEachIndexed { index, exp ->
+                Row(modifier = Modifier.height(IntrinsicSize.Max)) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.width(24.dp).fillMaxHeight(),
+                    ) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .padding(top = 6.dp)
+                                    .size(10.dp)
+                                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+                        )
+                        if (index < experiences.size - 1) {
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .width(1.dp)
+                                        .weight(1f)
+                                        .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
+                            )
+                        }
+                    }
+                    Column(
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(
+                                    start = 16.dp,
+                                    bottom = if (index < experiences.size - 1) 32.dp else 0.dp,
+                                ),
+                    ) {
+                        Text(
+                            text = exp.period,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.secondary,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = exp.role,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text = exp.company,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = exp.description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        )
+                    }
+                }
+            }
+        }
     }
 }
+
+@Composable
+fun StatusPill() {
+    val infiniteTransition = rememberInfiniteTransition(label = "statusPulse")
+    val dotAlpha by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0.3f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 1000),
+                repeatMode = RepeatMode.Reverse,
+            ),
+        label = "dotAlpha",
+    )
+    Row(
+        modifier =
+            Modifier
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                    shape = CircleShape,
+                ).padding(horizontal = 12.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .size(6.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = dotAlpha),
+                        shape = CircleShape,
+                    ),
+        )
+        Text(
+            text = "Available for new opportunities",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
+}
+
+data class SkillCategory(val label: String, val skills: List<String>)
 
 data class Project(
     val name: String,
@@ -236,7 +487,7 @@ data class Project(
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ShowcaseSection() {
+fun ShowcaseSection(modifier: Modifier = Modifier) {
     val projects =
         remember {
             listOf(
@@ -409,7 +660,7 @@ fun ShowcaseSection() {
 
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .padding(vertical = 60.dp, horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -547,9 +798,19 @@ fun ProjectDetailBottomSheet(
     }
 }
 
+data class Experience(
+    val period: String,
+    val role: String,
+    val company: String,
+    val description: String,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactSection(snackbarHostState: SnackbarHostState) {
+fun ContactSection(
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var company by remember { mutableStateOf("") }
@@ -582,7 +843,7 @@ fun ContactSection(snackbarHostState: SnackbarHostState) {
 
     Column(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .padding(vertical = 60.dp, horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -834,10 +1095,10 @@ fun CopyRights() {
     val now = LocalDateTime.now()
     val year = now.year
 
-    val author = "kukv"
+    val author = "kukv(Nonaka koki)"
 
     Text(
-        text = "© $year $author. All Rights Reserved.",
+        text = "© $year $author",
         style = MaterialTheme.typography.labelMedium,
     )
 }
