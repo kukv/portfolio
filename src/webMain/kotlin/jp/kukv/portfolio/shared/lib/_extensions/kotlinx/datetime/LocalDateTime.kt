@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalTime::class)
 
-package jp.kukv.portfolio._extensions.kotlinx.datetime
+package jp.kukv.portfolio.shared.lib._extensions.kotlinx.datetime
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone

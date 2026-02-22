@@ -1,4 +1,4 @@
-package jp.kukv.portfolio
+package jp.kukv.portfolio.shared.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable

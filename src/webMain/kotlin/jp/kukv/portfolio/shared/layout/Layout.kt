@@ -1,4 +1,4 @@
-package jp.kukv.portfolio
+package jp.kukv.portfolio.shared.layout
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
+import jp.kukv.portfolio.app.LocalAppState
+import jp.kukv.portfolio.components.DesktopHeader
+import jp.kukv.portfolio.components.Footer
+import jp.kukv.portfolio.components.MobileHeader
+import jp.kukv.portfolio.components.NavigationDrawer
+import jp.kukv.portfolio.screens.about.AboutSection
+import jp.kukv.portfolio.screens.contact.ContactSection
+import jp.kukv.portfolio.screens.home.HomeSection
+import jp.kukv.portfolio.screens.showcase.ShowcaseSection
 import kotlinx.coroutines.launch
 
 @Composable
