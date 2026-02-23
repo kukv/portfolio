@@ -27,7 +27,10 @@ import jp.kukv.portfolio.app.LocalAppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactSection(modifier: Modifier = Modifier) {
+fun ContactSection(
+    onShowSnackbar: suspend (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val appViewModel = LocalAppViewModel.current
     val isMobile = appViewModel.windowSizeState.isMobile
     val viewModel: ContactViewModel = viewModel { ContactViewModel() }
@@ -200,7 +203,7 @@ fun ContactSection(modifier: Modifier = Modifier) {
                 Button(
                     onClick = {
                         viewModel.submit(
-                            onSuccess = { appViewModel.snackbarHostState.showSnackbar("Message sent successfully!") },
+                            onSuccess = { onShowSnackbar("Message sent successfully!") },
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),

@@ -270,6 +270,8 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
                     ) {
                         ProjectCard(
                             project = project,
+                            isMobile = isMobile,
+                            isTablet = isTablet,
                             onClick = { viewModel.selectProject(it) },
                         )
                     }
@@ -297,11 +299,10 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
 @Composable
 fun ProjectCard(
     project: Project?,
+    isMobile: Boolean,
+    isTablet: Boolean,
     onClick: (Project) -> Unit,
 ) {
-    val appViewModel = LocalAppViewModel.current
-    val isMobile = appViewModel.windowSizeState.isMobile
-    val isTablet = appViewModel.windowSizeState.isTablet
     val cardWidth =
         if (isMobile) {
             300.dp

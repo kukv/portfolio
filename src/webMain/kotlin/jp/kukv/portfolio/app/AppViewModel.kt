@@ -1,21 +1,13 @@
 package jp.kukv.portfolio.app
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-
-// ── Window Size ────────────────────────────────────────────────────────────
 
 enum class WindowSizeClass {
     Mobile,
@@ -32,27 +24,17 @@ class WindowSizeState(windowSizeClass: WindowSizeClass, windowHeight: Dp) {
     val isDesktop: Boolean get() = windowSizeClass == WindowSizeClass.Desktop
 }
 
-// ── AppViewModel ───────────────────────────────────────────────────────────
-
 class AppViewModel : ViewModel() {
-    // テーマ
     var isDarkTheme by mutableStateOf(false)
-
-    // ウィンドウサイズ（App() から毎フレーム更新される）
     val windowSizeState = WindowSizeState(WindowSizeClass.Desktop, 0.dp)
 
-    // ナビゲーション
-    val scrollState = ScrollState(0)
-    val sectionPositions = mutableStateMapOf<String, Int>()
-    val drawerState = DrawerState(DrawerValue.Closed)
-    val snackbarHostState = SnackbarHostState()
-
-    fun navigate(section: String) {
-        viewModelScope.launch {
-            val pos = sectionPositions[section] ?: 0
-            scrollState.animateScrollTo(pos)
-        }
+    fun updateWindowSize(
+        sizeClass: WindowSizeClass,
+        height: Dp,
+    ) {
+        windowSizeState.windowSizeClass = sizeClass
+        windowSizeState.windowHeight = height
     }
 }
 
-val LocalAppViewModel = compositionLocalOf<AppViewModel> { error("No AppViewModel provided") }
+val LocalAppViewModel = staticCompositionLocalOf<AppViewModel> { error("No AppViewModel provided") }
