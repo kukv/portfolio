@@ -39,6 +39,9 @@ kotlin {
 
             implementation(libs.compose.ui.tooling.preview)
 
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.lifecycle.viewmodel.compose)
+
             implementation(npm("@js-joda/timezone", "2.3.0"))
         }
         commonTest.dependencies {

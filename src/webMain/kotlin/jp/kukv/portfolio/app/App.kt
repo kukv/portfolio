@@ -1,16 +1,32 @@
 package jp.kukv.portfolio.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import jp.kukv.portfolio.shared.layout.DesktopLayout
 import jp.kukv.portfolio.shared.layout.MobileLayout
 
 @Composable
 fun App() {
-    val appState = rememberAppState()
+    val viewModel: AppViewModel = viewModel { AppViewModel() }
 
-    AppTheme(appState) {
+    val windowInfo = LocalWindowInfo.current
+    val density = LocalDensity.current
+    val windowWidth = with(density) { windowInfo.containerSize.width.toDp() }
+    val windowHeight = with(density) { windowInfo.containerSize.height.toDp() }
+    viewModel.windowSizeState.windowSizeClass =
         when {
-            appState.windowSize.isMobile -> MobileLayout()
+            windowWidth < 600.dp -> WindowSizeClass.Mobile
+            windowWidth <= 893.dp -> WindowSizeClass.Tablet
+            else -> WindowSizeClass.Desktop
+        }
+    viewModel.windowSizeState.windowHeight = windowHeight
+
+    AppTheme(viewModel) {
+        when {
+            viewModel.windowSizeState.isMobile -> MobileLayout()
             else -> DesktopLayout()
         }
     }

@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppState
+import jp.kukv.portfolio.app.LocalAppViewModel
 
 @Composable
 fun MobileHeader(onMenuOpen: () -> Unit) {
@@ -55,8 +55,8 @@ fun MobileHeader(onMenuOpen: () -> Unit) {
 
 @Composable
 fun DesktopHeader(onNavigate: (String) -> Unit) {
-    val appState = LocalAppState.current
-    val isTablet = appState.windowSize.isTablet
+    val appViewModel = LocalAppViewModel.current
+    val isTablet = appViewModel.windowSizeState.isTablet
 
     Surface(
         shadowElevation = 4.dp,
@@ -85,22 +85,22 @@ fun DesktopHeader(onNavigate: (String) -> Unit) {
             if (!isTablet) {
                 Box(modifier = Modifier.widthIn(min = 48.dp), contentAlignment = Alignment.CenterEnd) {
                     IconToggleButton(
-                        checked = appState.theme.isDarkTheme,
-                        onCheckedChange = { appState.theme.isDarkTheme = it },
+                        checked = appViewModel.isDarkTheme,
+                        onCheckedChange = { appViewModel.isDarkTheme = it },
                     ) {
                         Icon(
-                            imageVector = if (appState.theme.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                            imageVector = if (appViewModel.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
                             contentDescription = "Toggle theme",
                         )
                     }
                 }
             } else {
                 IconToggleButton(
-                    checked = appState.theme.isDarkTheme,
-                    onCheckedChange = { appState.theme.isDarkTheme = it },
+                    checked = appViewModel.isDarkTheme,
+                    onCheckedChange = { appViewModel.isDarkTheme = it },
                 ) {
                     Icon(
-                        imageVector = if (appState.theme.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                        imageVector = if (appViewModel.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
                         contentDescription = "Toggle theme",
                     )
                 }

@@ -35,7 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppState
+import jp.kukv.portfolio.app.LocalAppViewModel
 import org.jetbrains.compose.resources.painterResource
 import portfolio.generated.resources.Res
 import portfolio.generated.resources.profile
@@ -46,10 +46,10 @@ fun HomeSection(
     topPadding: Dp = 0.dp,
     modifier: Modifier = Modifier,
 ) {
-    val appState = LocalAppState.current
-    val isMobile = appState.windowSize.isMobile
-    val isTablet = appState.windowSize.isTablet
-    val sectionHeight = appState.windowSize.windowHeight - topPadding
+    val appViewModel = LocalAppViewModel.current
+    val isMobile = appViewModel.windowSizeState.isMobile
+    val isTablet = appViewModel.windowSizeState.isTablet
+    val sectionHeight = appViewModel.windowSizeState.windowHeight - topPadding
     Box(
         modifier =
             modifier

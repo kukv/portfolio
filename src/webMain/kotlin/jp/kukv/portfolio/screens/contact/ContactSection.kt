@@ -18,53 +18,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
+import jp.kukv.portfolio.app.LocalAppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactSection(modifier: Modifier = Modifier) {
-    val appState = LocalAppState.current
-    val isMobile = appState.windowSize.isMobile
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var company by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
-    var agreedToPrivacyPolicy by remember { mutableStateOf(false) }
-
-    var isLoading by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-
-    val emailRegex =
-        Regex(
-            "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
-        )
-
-    val isFirstNameValid = firstName.isNotBlank() && firstName.length <= 100
-    val isLastNameValid = lastName.isNotBlank() && lastName.length <= 100
-    val isCompanyValid = company.isNotBlank() && company.length <= 100
-    val isEmailValid = email.isNotBlank() && email.length <= 254 && emailRegex.matches(email)
-    val isMessageValid = message.isNotBlank() && message.length <= 500
-
-    val isFormValid =
-        !isLoading &&
-            isFirstNameValid &&
-            isLastNameValid &&
-            isCompanyValid &&
-            isEmailValid &&
-            isMessageValid &&
-            agreedToPrivacyPolicy
+    val appViewModel = LocalAppViewModel.current
+    val isMobile = appViewModel.windowSizeState.isMobile
+    val viewModel: ContactViewModel = viewModel { ContactViewModel() }
 
     Column(
         modifier =
@@ -97,30 +63,30 @@ fun ContactSection(modifier: Modifier = Modifier) {
             ) {
                 if (isMobile) {
                     OutlinedTextField(
-                        value = firstName,
-                        onValueChange = { firstName = it },
+                        value = viewModel.firstName,
+                        onValueChange = { viewModel.firstName = it },
                         label = { Text("First name*") },
                         modifier = Modifier.fillMaxWidth(),
-                        isError = firstName.isNotEmpty() && !isFirstNameValid,
+                        isError = viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid,
                         supportingText = {
-                            if (firstName.isNotEmpty() && !isFirstNameValid) {
+                            if (viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid) {
                                 Text(
-                                    if (firstName.isBlank()) "Required" else "Max 100 characters",
+                                    if (viewModel.firstName.isBlank()) "Required" else "Max 100 characters",
                                     color = MaterialTheme.colorScheme.error,
                                 )
                             }
                         },
                     )
                     OutlinedTextField(
-                        value = lastName,
-                        onValueChange = { lastName = it },
+                        value = viewModel.lastName,
+                        onValueChange = { viewModel.lastName = it },
                         label = { Text("Last name*") },
                         modifier = Modifier.fillMaxWidth(),
-                        isError = lastName.isNotEmpty() && !isLastNameValid,
+                        isError = viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid,
                         supportingText = {
-                            if (lastName.isNotEmpty() && !isLastNameValid) {
+                            if (viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid) {
                                 Text(
-                                    if (lastName.isBlank()) "Required" else "Max 100 characters",
+                                    if (viewModel.lastName.isBlank()) "Required" else "Max 100 characters",
                                     color = MaterialTheme.colorScheme.error,
                                 )
                             }
@@ -132,30 +98,30 @@ fun ContactSection(modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         OutlinedTextField(
-                            value = firstName,
-                            onValueChange = { firstName = it },
+                            value = viewModel.firstName,
+                            onValueChange = { viewModel.firstName = it },
                             label = { Text("First name*") },
                             modifier = Modifier.weight(1f),
-                            isError = firstName.isNotEmpty() && !isFirstNameValid,
+                            isError = viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid,
                             supportingText = {
-                                if (firstName.isNotEmpty() && !isFirstNameValid) {
+                                if (viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid) {
                                     Text(
-                                        if (firstName.isBlank()) "Required" else "Max 100 characters",
+                                        if (viewModel.firstName.isBlank()) "Required" else "Max 100 characters",
                                         color = MaterialTheme.colorScheme.error,
                                     )
                                 }
                             },
                         )
                         OutlinedTextField(
-                            value = lastName,
-                            onValueChange = { lastName = it },
+                            value = viewModel.lastName,
+                            onValueChange = { viewModel.lastName = it },
                             label = { Text("Last name*") },
                             modifier = Modifier.weight(1f),
-                            isError = lastName.isNotEmpty() && !isLastNameValid,
+                            isError = viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid,
                             supportingText = {
-                                if (lastName.isNotEmpty() && !isLastNameValid) {
+                                if (viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid) {
                                     Text(
-                                        if (lastName.isBlank()) "Required" else "Max 100 characters",
+                                        if (viewModel.lastName.isBlank()) "Required" else "Max 100 characters",
                                         color = MaterialTheme.colorScheme.error,
                                     )
                                 }
@@ -165,15 +131,15 @@ fun ContactSection(modifier: Modifier = Modifier) {
                 }
 
                 OutlinedTextField(
-                    value = company,
-                    onValueChange = { company = it },
+                    value = viewModel.company,
+                    onValueChange = { viewModel.company = it },
                     label = { Text("Company*") },
                     modifier = Modifier.fillMaxWidth(),
-                    isError = company.isNotEmpty() && !isCompanyValid,
+                    isError = viewModel.company.isNotEmpty() && !viewModel.isCompanyValid,
                     supportingText = {
-                        if (company.isNotEmpty() && !isCompanyValid) {
+                        if (viewModel.company.isNotEmpty() && !viewModel.isCompanyValid) {
                             Text(
-                                if (company.isBlank()) "Required" else "Max 100 characters",
+                                if (viewModel.company.isBlank()) "Required" else "Max 100 characters",
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
@@ -181,19 +147,18 @@ fun ContactSection(modifier: Modifier = Modifier) {
                 )
 
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = viewModel.email,
+                    onValueChange = { viewModel.email = it },
                     label = { Text("Email*") },
                     modifier = Modifier.fillMaxWidth(),
-                    isError = email.isNotEmpty() && !isEmailValid,
+                    isError = viewModel.email.isNotEmpty() && !viewModel.isEmailValid,
                     supportingText = {
-                        if (email.isNotEmpty() && !isEmailValid) {
+                        if (viewModel.email.isNotEmpty() && !viewModel.isEmailValid) {
                             val errorText =
                                 when {
-                                    email.isBlank() -> "Required"
-                                    email.length > 254 -> "Max 254 characters"
-                                    !emailRegex.matches(email) -> "Invalid email format"
-                                    else -> ""
+                                    viewModel.email.isBlank() -> "Required"
+                                    viewModel.email.length > 254 -> "Max 254 characters"
+                                    else -> "Invalid email format"
                                 }
                             Text(errorText, color = MaterialTheme.colorScheme.error)
                         }
@@ -201,16 +166,16 @@ fun ContactSection(modifier: Modifier = Modifier) {
                 )
 
                 OutlinedTextField(
-                    value = message,
-                    onValueChange = { message = it },
+                    value = viewModel.message,
+                    onValueChange = { viewModel.message = it },
                     label = { Text("message*") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3,
-                    isError = message.isNotEmpty() && !isMessageValid,
+                    isError = viewModel.message.isNotEmpty() && !viewModel.isMessageValid,
                     supportingText = {
-                        if (message.isNotEmpty() && !isMessageValid) {
+                        if (viewModel.message.isNotEmpty() && !viewModel.isMessageValid) {
                             Text(
-                                if (message.isBlank()) "Required" else "Max 500 characters",
+                                if (viewModel.message.isBlank()) "Required" else "Max 500 characters",
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
@@ -223,8 +188,8 @@ fun ContactSection(modifier: Modifier = Modifier) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Switch(
-                        checked = agreedToPrivacyPolicy,
-                        onCheckedChange = { agreedToPrivacyPolicy = it },
+                        checked = viewModel.agreedToPrivacyPolicy,
+                        onCheckedChange = { viewModel.agreedToPrivacyPolicy = it },
                     )
                     Text(
                         text = "By selecting this, you agree to our privacy policy.",
@@ -234,24 +199,14 @@ fun ContactSection(modifier: Modifier = Modifier) {
 
                 Button(
                     onClick = {
-                        scope.launch {
-                            isLoading = true
-                            delay(2000)
-                            isLoading = false
-                            appState.navigation.snackbarHostState.showSnackbar("Message sent successfully!")
-                            // Optional: Reset form
-                            firstName = ""
-                            lastName = ""
-                            company = ""
-                            email = ""
-                            message = ""
-                            agreedToPrivacyPolicy = false
-                        }
+                        viewModel.submit(
+                            onSuccess = { appViewModel.snackbarHostState.showSnackbar("Message sent successfully!") },
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = isFormValid,
+                    enabled = viewModel.isFormValid,
                 ) {
-                    if (isLoading) {
+                    if (viewModel.isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
                             color = MaterialTheme.colorScheme.onPrimary,
