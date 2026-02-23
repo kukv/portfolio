@@ -2,6 +2,7 @@
 java = "25"
 kotlin_version = { strictly = "2.3.10" }
 compose_multiplatform_vsersion = { strictly = "1.10.1" }
+lifecycle = { strictly = "2.10.0-alpha08" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_version" }
@@ -24,3 +25,5 @@ components-ui-tooling-preview = { module = "org.jetbrains.compose.components:com
 compose-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version = { strictly = "1.3.0-alpha04" } }
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version = { strictly = "1.7.3" } }
 material3-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version = { strictly = "1.11.0-alpha02" } }
+lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }

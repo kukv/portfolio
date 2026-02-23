@@ -13,13 +13,13 @@ import jp.kukv.portfolio.shared.theme.changeColorScheme
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AppTheme(
-    appState: AppState,
+    viewModel: AppViewModel,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = changeColorScheme(appState.theme.isDarkTheme)
+    val colorScheme = changeColorScheme(viewModel.isDarkTheme)
     val shapes = Shapes(largeIncreased = RoundedCornerShape(24.dp))
 
-    CompositionLocalProvider(LocalAppState provides appState) {
+    CompositionLocalProvider(LocalAppViewModel provides viewModel) {
         MaterialExpressiveTheme(
             colorScheme = colorScheme,
             shapes = shapes,

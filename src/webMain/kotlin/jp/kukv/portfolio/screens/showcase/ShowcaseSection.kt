@@ -35,7 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import jp.kukv.portfolio.app.LocalAppViewModel
 
 data class Project(
     val name: String,
@@ -214,13 +215,11 @@ private val projects =
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ShowcaseSection(modifier: Modifier = Modifier) {
-    val appState = LocalAppState.current
-    val isMobile = appState.windowSize.isMobile
-    val isTablet = appState.windowSize.isTablet
-    val projects = remember { projects }
-
-    var visibleCount by remember { mutableStateOf(8) }
-    var selectedProject by remember { mutableStateOf<Project?>(null) }
+    val appViewModel = LocalAppViewModel.current
+    val isMobile = appViewModel.windowSizeState.isMobile
+    val isTablet = appViewModel.windowSizeState.isTablet
+    val viewModel: ShowcaseViewModel = viewModel { ShowcaseViewModel() }
+    val allProjects = remember { projects }
     val sheetState = rememberModalBottomSheetState()
 
     Column(
@@ -238,7 +237,7 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(32.dp))
 
         val itemsToShow = mutableListOf<Project?>()
-        itemsToShow.addAll(projects.take(visibleCount))
+        itemsToShow.addAll(allProjects.take(viewModel.visibleCount))
         while (itemsToShow.size < 8) {
             itemsToShow.add(null) // Representing "Coming Soon"
         }
@@ -271,26 +270,28 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
                     ) {
                         ProjectCard(
                             project = project,
-                            onClick = { selectedProject = it },
+                            isMobile = isMobile,
+                            isTablet = isTablet,
+                            onClick = { viewModel.selectProject(it) },
                         )
                     }
                 }
             }
         }
 
-        if (projects.size > visibleCount) {
+        if (allProjects.size > viewModel.visibleCount) {
             Spacer(modifier = Modifier.height(32.dp))
-            Button(onClick = { visibleCount += 8 }) {
+            Button(onClick = { viewModel.loadMore() }) {
                 Text("More")
             }
         }
     }
 
-    if (selectedProject != null) {
+    if (viewModel.selectedProject != null) {
         ProjectDetailBottomSheet(
-            project = selectedProject!!,
+            project = viewModel.selectedProject!!,
             sheetState = sheetState,
-            onDismiss = { selectedProject = null },
+            onDismiss = { viewModel.dismissProject() },
         )
     }
 }
@@ -298,11 +299,10 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
 @Composable
 fun ProjectCard(
     project: Project?,
+    isMobile: Boolean,
+    isTablet: Boolean,
     onClick: (Project) -> Unit,
 ) {
-    val appState = LocalAppState.current
-    val isMobile = appState.windowSize.isMobile
-    val isTablet = appState.windowSize.isTablet
     val cardWidth =
         if (isMobile) {
             300.dp

@@ -22,13 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppState
-import kotlinx.coroutines.launch
 
 @Composable
-fun NavigationDrawer() {
-    val appState = LocalAppState.current
-
+fun NavigationDrawer(
+    onNavigate: (String) -> Unit,
+    isDarkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit,
+) {
     Surface(
         modifier = Modifier.fillMaxHeight().width(280.dp),
         color = MaterialTheme.colorScheme.surface,
@@ -45,37 +45,25 @@ fun NavigationDrawer() {
             NavigationDrawerItem(
                 label = { Text("Home") },
                 selected = false,
-                onClick = {
-                    appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                    appState.navigation.navigate("home")
-                },
+                onClick = { onNavigate("home") },
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
             NavigationDrawerItem(
                 label = { Text("About") },
                 selected = false,
-                onClick = {
-                    appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                    appState.navigation.navigate("about")
-                },
+                onClick = { onNavigate("about") },
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
             NavigationDrawerItem(
                 label = { Text("Showcase") },
                 selected = false,
-                onClick = {
-                    appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                    appState.navigation.navigate("showcase")
-                },
+                onClick = { onNavigate("showcase") },
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
             NavigationDrawerItem(
                 label = { Text("Contact") },
                 selected = false,
-                onClick = {
-                    appState.navigation.scope.launch { appState.navigation.drawerState.close() }
-                    appState.navigation.navigate("contact")
-                },
+                onClick = { onNavigate("contact") },
                 modifier = Modifier.padding(horizontal = 8.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -84,12 +72,12 @@ fun NavigationDrawer() {
                 contentAlignment = Alignment.CenterEnd,
             ) {
                 IconToggleButton(
-                    checked = appState.theme.isDarkTheme,
-                    onCheckedChange = { appState.theme.isDarkTheme = it },
+                    checked = isDarkTheme,
+                    onCheckedChange = onThemeChange,
                 ) {
                     Icon(
                         imageVector =
-                            if (appState.theme.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                            if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
                         contentDescription = "Toggle theme",
                     )
                 }

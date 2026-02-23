@@ -26,7 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppState
+import jp.kukv.portfolio.app.LocalAppViewModel
 import kotlin.collections.chunked
 import kotlin.collections.forEach
 
@@ -86,9 +86,9 @@ private val experiences =
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutSection(modifier: Modifier = Modifier) {
-    val appState = LocalAppState.current
-    val isMobile = appState.windowSize.isMobile
-    val isTablet = appState.windowSize.isTablet
+    val appViewModel = LocalAppViewModel.current
+    val isMobile = appViewModel.windowSizeState.isMobile
+    val isTablet = appViewModel.windowSizeState.isTablet
 
     val skillCategories = remember { skillCategories }
     val experiences = remember { experiences }
