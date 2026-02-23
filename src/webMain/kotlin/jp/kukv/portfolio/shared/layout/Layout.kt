@@ -13,10 +13,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import androidx.compose.runtime.toMutableStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
@@ -25,26 +23,24 @@ import jp.kukv.portfolio.components.DesktopHeader
 import jp.kukv.portfolio.components.Footer
 import jp.kukv.portfolio.components.MobileHeader
 import jp.kukv.portfolio.components.NavigationDrawer
-import jp.kukv.portfolio.screens.about.AboutSection
-import jp.kukv.portfolio.screens.contact.ContactSection
-import jp.kukv.portfolio.screens.home.HomeSection
-import jp.kukv.portfolio.screens.showcase.ShowcaseSection
+import jp.kukv.portfolio.screens.about.AboutScreen
+import jp.kukv.portfolio.screens.contact.ContactScreen
+import jp.kukv.portfolio.screens.home.HomeScreen
+import jp.kukv.portfolio.screens.showcase.ShowcaseScreen
 import kotlinx.coroutines.launch
 
 @Composable
-fun MobileLayout() {
+fun MobileLayout(
+    scrollState: ScrollState,
+    sectionPositions: SnapshotStateMap<String, Int>,
+    snackbarHostState: SnackbarHostState,
+) {
     val appViewModel = LocalAppViewModel.current
-    val scrollState = remember { ScrollState(0) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val snackbarHostState = remember { SnackbarHostState() }
-    val sectionPositions: SnapshotStateMap<String, Int> = remember { emptyList<Pair<String, Int>>().toMutableStateMap() }
     val scope = rememberCoroutineScope()
 
     fun navigate(section: String) {
-        scope.launch {
-            val pos = sectionPositions[section] ?: 0
-            scrollState.animateScrollTo(pos)
-        }
+        scope.launch { scrollToSection(section, scrollState, sectionPositions) }
     }
 
     ModalNavigationDrawer(
@@ -52,11 +48,13 @@ fun MobileLayout() {
         drawerContent = {
             NavigationDrawer(
                 onNavigate = { section ->
-                    scope.launch { drawerState.close() }
-                    navigate(section)
+                    scope.launch {
+                        drawerState.close()
+                        scrollToSection(section, scrollState, sectionPositions)
+                    }
                 },
                 isDarkTheme = appViewModel.isDarkTheme,
-                onThemeChange = { appViewModel.isDarkTheme = it },
+                onThemeChange = { appViewModel.setDarkTheme(it) },
             )
         },
     ) {
@@ -80,18 +78,16 @@ fun MobileLayout() {
 }
 
 @Composable
-fun DesktopLayout() {
+fun DesktopLayout(
+    scrollState: ScrollState,
+    sectionPositions: SnapshotStateMap<String, Int>,
+    snackbarHostState: SnackbarHostState,
+) {
     val appViewModel = LocalAppViewModel.current
-    val scrollState = remember { ScrollState(0) }
-    val snackbarHostState = remember { SnackbarHostState() }
-    val sectionPositions: SnapshotStateMap<String, Int> = remember { emptyList<Pair<String, Int>>().toMutableStateMap() }
     val scope = rememberCoroutineScope()
 
     fun navigate(section: String) {
-        scope.launch {
-            val pos = sectionPositions[section] ?: 0
-            scrollState.animateScrollTo(pos)
-        }
+        scope.launch { scrollToSection(section, scrollState, sectionPositions) }
     }
 
     Scaffold(
@@ -100,7 +96,7 @@ fun DesktopLayout() {
                 onNavigate = ::navigate,
                 isTablet = appViewModel.windowSizeState.isTablet,
                 isDarkTheme = appViewModel.isDarkTheme,
-                onThemeChange = { appViewModel.isDarkTheme = it },
+                onThemeChange = { appViewModel.setDarkTheme(it) },
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -113,6 +109,15 @@ fun DesktopLayout() {
             onNavigate = ::navigate,
         )
     }
+}
+
+private suspend fun scrollToSection(
+    section: String,
+    scrollState: ScrollState,
+    sectionPositions: SnapshotStateMap<String, Int>,
+) {
+    val pos = sectionPositions[section] ?: 0
+    scrollState.animateScrollTo(pos)
 }
 
 @Composable
@@ -130,30 +135,30 @@ private fun MainContent(
                 .padding(padding)
                 .verticalScroll(scrollState),
     ) {
-        HomeSection(
-            onNavigate = onNavigate,
-            topPadding = padding.calculateTopPadding(),
+        HomeScreen(
             modifier =
                 Modifier.onGloballyPositioned { coordinates ->
                     val pos = coordinates.positionInParent().y.toInt()
                     sectionPositions["home"] = maxOf(0, pos)
                 },
+            onNavigate = onNavigate,
+            topPadding = padding.calculateTopPadding(),
         )
-        AboutSection(
+        AboutScreen(
             modifier =
                 Modifier.onGloballyPositioned { coordinates ->
                     val pos = coordinates.positionInParent().y.toInt()
                     sectionPositions["about"] = maxOf(0, pos)
                 },
         )
-        ShowcaseSection(
+        ShowcaseScreen(
             modifier =
                 Modifier.onGloballyPositioned { coordinates ->
                     val pos = coordinates.positionInParent().y.toInt()
                     sectionPositions["showcase"] = maxOf(0, pos)
                 },
         )
-        ContactSection(
+        ContactScreen(
             onShowSnackbar = { message -> snackbarHostState.showSnackbar(message) },
             modifier =
                 Modifier.onGloballyPositioned { coordinates ->
