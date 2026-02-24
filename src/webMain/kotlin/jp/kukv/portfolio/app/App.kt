@@ -1,7 +1,11 @@
 package jp.kukv.portfolio.app
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
@@ -16,7 +20,6 @@ fun App() {
     val windowInfo = LocalWindowInfo.current
     val density = LocalDensity.current
     val windowWidth = with(density) { windowInfo.containerSize.width.toDp() }
-    val windowHeight = with(density) { windowInfo.containerSize.height.toDp() }
     val windowSizeClass =
         when {
             windowWidth < 600.dp -> WindowSizeClass.Mobile
@@ -24,14 +27,18 @@ fun App() {
             else -> WindowSizeClass.Desktop
         }
 
-    SideEffect {
-        viewModel.updateWindowSize(windowSizeClass, windowHeight)
+    LaunchedEffect(windowSizeClass) {
+        viewModel.updateWindowSize(windowSizeClass)
     }
+
+    val scrollState = remember { ScrollState(0) }
+    val sectionPositions = remember { mutableStateMapOf<String, Int>() }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     AppTheme(viewModel) {
         when {
-            viewModel.windowSizeState.isMobile -> MobileLayout()
-            else -> DesktopLayout()
+            viewModel.windowSizeState.isMobile -> MobileLayout(scrollState, sectionPositions, snackbarHostState)
+            else -> DesktopLayout(scrollState, sectionPositions, snackbarHostState)
         }
     }
 }

@@ -27,7 +27,7 @@ import jp.kukv.portfolio.app.LocalAppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactSection(
+fun ContactScreen(
     onShowSnackbar: suspend (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -64,78 +64,11 @@ fun ContactSection(
                 modifier = Modifier.padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                if (isMobile) {
-                    OutlinedTextField(
-                        value = viewModel.firstName,
-                        onValueChange = { viewModel.firstName = it },
-                        label = { Text("First name*") },
-                        modifier = Modifier.fillMaxWidth(),
-                        isError = viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid,
-                        supportingText = {
-                            if (viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid) {
-                                Text(
-                                    if (viewModel.firstName.isBlank()) "Required" else "Max 100 characters",
-                                    color = MaterialTheme.colorScheme.error,
-                                )
-                            }
-                        },
-                    )
-                    OutlinedTextField(
-                        value = viewModel.lastName,
-                        onValueChange = { viewModel.lastName = it },
-                        label = { Text("Last name*") },
-                        modifier = Modifier.fillMaxWidth(),
-                        isError = viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid,
-                        supportingText = {
-                            if (viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid) {
-                                Text(
-                                    if (viewModel.lastName.isBlank()) "Required" else "Max 100 characters",
-                                    color = MaterialTheme.colorScheme.error,
-                                )
-                            }
-                        },
-                    )
-                } else {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        OutlinedTextField(
-                            value = viewModel.firstName,
-                            onValueChange = { viewModel.firstName = it },
-                            label = { Text("First name*") },
-                            modifier = Modifier.weight(1f),
-                            isError = viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid,
-                            supportingText = {
-                                if (viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid) {
-                                    Text(
-                                        if (viewModel.firstName.isBlank()) "Required" else "Max 100 characters",
-                                        color = MaterialTheme.colorScheme.error,
-                                    )
-                                }
-                            },
-                        )
-                        OutlinedTextField(
-                            value = viewModel.lastName,
-                            onValueChange = { viewModel.lastName = it },
-                            label = { Text("Last name*") },
-                            modifier = Modifier.weight(1f),
-                            isError = viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid,
-                            supportingText = {
-                                if (viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid) {
-                                    Text(
-                                        if (viewModel.lastName.isBlank()) "Required" else "Max 100 characters",
-                                        color = MaterialTheme.colorScheme.error,
-                                    )
-                                }
-                            },
-                        )
-                    }
-                }
+                NameFieldRow(viewModel = viewModel, isMobile = isMobile)
 
                 OutlinedTextField(
                     value = viewModel.company,
-                    onValueChange = { viewModel.company = it },
+                    onValueChange = { viewModel.updateCompany(it) },
                     label = { Text("Company*") },
                     modifier = Modifier.fillMaxWidth(),
                     isError = viewModel.company.isNotEmpty() && !viewModel.isCompanyValid,
@@ -151,7 +84,7 @@ fun ContactSection(
 
                 OutlinedTextField(
                     value = viewModel.email,
-                    onValueChange = { viewModel.email = it },
+                    onValueChange = { viewModel.updateEmail(it) },
                     label = { Text("Email*") },
                     modifier = Modifier.fillMaxWidth(),
                     isError = viewModel.email.isNotEmpty() && !viewModel.isEmailValid,
@@ -170,8 +103,8 @@ fun ContactSection(
 
                 OutlinedTextField(
                     value = viewModel.message,
-                    onValueChange = { viewModel.message = it },
-                    label = { Text("message*") },
+                    onValueChange = { viewModel.updateMessage(it) },
+                    label = { Text("Message*") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3,
                     isError = viewModel.message.isNotEmpty() && !viewModel.isMessageValid,
@@ -192,7 +125,7 @@ fun ContactSection(
                 ) {
                     Switch(
                         checked = viewModel.agreedToPrivacyPolicy,
-                        onCheckedChange = { viewModel.agreedToPrivacyPolicy = it },
+                        onCheckedChange = { viewModel.updateAgreedToPrivacyPolicy(it) },
                     )
                     Text(
                         text = "By selecting this, you agree to our privacy policy.",
@@ -222,4 +155,67 @@ fun ContactSection(
             }
         }
     }
+}
+
+@Composable
+private fun NameFieldRow(
+    viewModel: ContactViewModel,
+    isMobile: Boolean,
+) {
+    if (isMobile) {
+        FirstNameField(viewModel = viewModel, modifier = Modifier.fillMaxWidth())
+        LastNameField(viewModel = viewModel, modifier = Modifier.fillMaxWidth())
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            FirstNameField(viewModel = viewModel, modifier = Modifier.weight(1f))
+            LastNameField(viewModel = viewModel, modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun FirstNameField(
+    viewModel: ContactViewModel,
+    modifier: Modifier,
+) {
+    OutlinedTextField(
+        value = viewModel.firstName,
+        onValueChange = { viewModel.updateFirstName(it) },
+        label = { Text("First name*") },
+        modifier = modifier,
+        isError = viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid,
+        supportingText = {
+            if (viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid) {
+                Text(
+                    if (viewModel.firstName.isBlank()) "Required" else "Max 100 characters",
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
+    )
+}
+
+@Composable
+private fun LastNameField(
+    viewModel: ContactViewModel,
+    modifier: Modifier,
+) {
+    OutlinedTextField(
+        value = viewModel.lastName,
+        onValueChange = { viewModel.updateLastName(it) },
+        label = { Text("Last name*") },
+        modifier = modifier,
+        isError = viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid,
+        supportingText = {
+            if (viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid) {
+                Text(
+                    if (viewModel.lastName.isBlank()) "Required" else "Max 100 characters",
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
+    )
 }

@@ -26,6 +26,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jp.kukv.portfolio.app.LocalAppViewModel
 
+@Immutable
 data class Project(
     val name: String,
     val technologies: List<String>,
@@ -48,6 +50,7 @@ data class Project(
     val artifacts: List<String> = emptyList(),
 )
 
+// TODO: 実際のプロジェクトデータに置き換える（imageUrl・url を含む）
 private val projects =
     listOf(
         Project(
@@ -214,13 +217,11 @@ private val projects =
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ShowcaseSection(modifier: Modifier = Modifier) {
+fun ShowcaseScreen(modifier: Modifier = Modifier) {
     val appViewModel = LocalAppViewModel.current
     val isMobile = appViewModel.windowSizeState.isMobile
     val isTablet = appViewModel.windowSizeState.isTablet
     val viewModel: ShowcaseViewModel = viewModel { ShowcaseViewModel() }
-    val allProjects = remember { projects }
-    val sheetState = rememberModalBottomSheetState()
 
     Column(
         modifier =
@@ -236,11 +237,11 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(32.dp))
 
-        val itemsToShow = mutableListOf<Project?>()
-        itemsToShow.addAll(allProjects.take(viewModel.visibleCount))
-        while (itemsToShow.size < 8) {
-            itemsToShow.add(null) // Representing "Coming Soon"
-        }
+        val itemsToShow =
+            remember(viewModel.visibleCount) {
+                val base: List<Project?> = projects.take(viewModel.visibleCount)
+                base + List(maxOf(0, 8 - base.size)) { null }
+            }
 
         FlowRow(
             modifier = Modifier.widthIn(max = 1300.dp),
@@ -279,7 +280,7 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
             }
         }
 
-        if (allProjects.size > viewModel.visibleCount) {
+        if (projects.size > viewModel.visibleCount) {
             Spacer(modifier = Modifier.height(32.dp))
             Button(onClick = { viewModel.loadMore() }) {
                 Text("More")
@@ -287,30 +288,21 @@ fun ShowcaseSection(modifier: Modifier = Modifier) {
         }
     }
 
-    if (viewModel.selectedProject != null) {
+    viewModel.selectedProject?.let { project ->
         ProjectDetailBottomSheet(
-            project = viewModel.selectedProject!!,
-            sheetState = sheetState,
+            project = project,
             onDismiss = { viewModel.dismissProject() },
         )
     }
 }
 
 @Composable
-fun ProjectCard(
+private fun ProjectCard(
     project: Project?,
     isMobile: Boolean,
     isTablet: Boolean,
     onClick: (Project) -> Unit,
 ) {
-    val cardWidth =
-        if (isMobile) {
-            300.dp
-        } else if (isTablet) {
-            300.dp
-        } else {
-            300.dp
-        }
     val cardHeight =
         if (isMobile) {
             200.dp
@@ -319,11 +311,14 @@ fun ProjectCard(
         } else {
             280.dp
         }
+    val cardModifier =
+        if (isMobile) {
+            Modifier.padding(8.dp).fillMaxWidth().height(cardHeight)
+        } else {
+            Modifier.padding(8.dp).size(width = 300.dp, height = cardHeight)
+        }
     Card(
-        modifier =
-            Modifier
-                .padding(8.dp)
-                .size(width = cardWidth, height = cardHeight),
+        modifier = cardModifier,
         onClick = { project?.let { onClick(it) } },
         enabled = project != null,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -338,6 +333,7 @@ fun ProjectCard(
                 contentAlignment = Alignment.Center,
             ) {
                 if (project != null) {
+                    // TODO: project.imageUrl を使用した実際の画像表示に置き換える
                     Text("Image Placeholder")
                 } else {
                     Text("Coming Soon", style = MaterialTheme.typography.titleMedium)
@@ -356,11 +352,11 @@ fun ProjectCard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProjectDetailBottomSheet(
+private fun ProjectDetailBottomSheet(
     project: Project,
-    sheetState: androidx.compose.material3.SheetState,
     onDismiss: () -> Unit,
 ) {
+    val sheetState = rememberModalBottomSheetState()
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
@@ -380,6 +376,7 @@ fun ProjectDetailBottomSheet(
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = project.description, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(16.dp))
+            // TODO: クリッカブルなリンクに変更する（例: kotlinx.browser.window.open(project.url, "_blank")）
             Text(text = "URL: ${project.url}", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) {

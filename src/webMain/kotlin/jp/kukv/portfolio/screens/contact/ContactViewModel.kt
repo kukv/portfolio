@@ -10,12 +10,19 @@ import kotlinx.coroutines.launch
 
 class ContactViewModel : ViewModel() {
     var firstName by mutableStateOf("")
+        private set
     var lastName by mutableStateOf("")
+        private set
     var company by mutableStateOf("")
+        private set
     var email by mutableStateOf("")
+        private set
     var message by mutableStateOf("")
+        private set
     var agreedToPrivacyPolicy by mutableStateOf(false)
+        private set
     var isLoading by mutableStateOf(false)
+        private set
 
     private val emailRegex =
         Regex(
@@ -38,9 +45,35 @@ class ContactViewModel : ViewModel() {
                 isMessageValid &&
                 agreedToPrivacyPolicy
 
+    fun updateFirstName(value: String) {
+        firstName = value
+    }
+
+    fun updateLastName(value: String) {
+        lastName = value
+    }
+
+    fun updateCompany(value: String) {
+        company = value
+    }
+
+    fun updateEmail(value: String) {
+        email = value
+    }
+
+    fun updateMessage(value: String) {
+        message = value
+    }
+
+    fun updateAgreedToPrivacyPolicy(value: Boolean) {
+        agreedToPrivacyPolicy = value
+    }
+
     fun submit(onSuccess: suspend () -> Unit) {
         viewModelScope.launch {
             isLoading = true
+            // TODO: バックエンド API への実際の送信処理に置き換える
+            // TODO: ネットワークエラー・サーバーエラー時のエラーハンドリングを追加する
             delay(2000)
             isLoading = false
             onSuccess()

@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 
 class ShowcaseViewModel : ViewModel() {
     var visibleCount by mutableStateOf(8)
+        private set
     var selectedProject by mutableStateOf<Project?>(null)
+        private set
 
     fun loadMore() {
         visibleCount += 8
