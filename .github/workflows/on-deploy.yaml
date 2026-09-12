@@ -9,6 +9,8 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,18 +20,21 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Gradle Cache
-        uses: ./.github/actions/gradle-cache
+        # $/ 記法は actionlint(v1.7.12)が構文エラーにするため ./ のままにする
+        uses: ./.github/actions/gradle-cache # zizmor: ignore[self-repository]
 
       - name: Check with Gradle
-        uses: ./.github/actions/gradle-action
+        uses: ./.github/actions/gradle-action # zizmor: ignore[self-repository]
         with:
           command: wasmJsBrowserDistribution
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: build/dist/wasmJs/productionExecutable
 
@@ -49,7 +54,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
   generate-release-note:
     needs: deploy
@@ -61,6 +66,10 @@ jobs:
 
     steps:
       - name: Generate a release note
-        run: gh release create ${{ github.ref_name }} --generate-notes --latest --verify-tag --repo ${{ github.repository }}
+        # タグ名・リポジトリ名は env 経由で渡す(${{ }} の直接埋め込みは注入の余地がある)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+          TARGET_REPO: ${{ github.repository }}
+        run: |
+          gh release create "$TAG_NAME" --generate-notes --latest --verify-tag --repo "$TARGET_REPO"
