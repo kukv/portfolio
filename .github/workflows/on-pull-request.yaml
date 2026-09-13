@@ -28,4 +28,6 @@ jobs:
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
       - name: Check with Gradle
-        run: ./gradlew check
+        # js(IR) はローカル確認用(wasm より高速)で出荷しないため CI では回さない。
+        # `check` から js のタスクだけが落ち、wasm/common 側は同一。
+        run: ./gradlew spotlessCheck wasmJsTest
