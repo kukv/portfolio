@@ -70,8 +70,11 @@ val jsYarnResolutions =
         "diff" to "8.0.3", // GHSA-73rr-hh4g-fpgx
         "engine.io" to "6.6.7", // GHSA-gr94-w7qr-f4j3
         // GHSA-q3j6-qgpj-74h6 / GHSA-v39h-62p7-jpjc / GHSA-4c8g-83qw-93j6 /
-        // GHSA-v2hh-gcrm-f6hx / GHSA-7p8r-x3mc-p8w7 / GHSA-f65p-4m7j-42xc
-        "fast-uri" to "3.1.6",
+        // GHSA-v2hh-gcrm-f6hx / GHSA-7p8r-x3mc-p8w7 / GHSA-f65p-4m7j-42xc /
+        // GHSA-5jgf-p345-68v8 / GHSA-qw65-cvwx-89v3
+        // GHSA-qw65-cvwx-89v3 はまだ global advisory DB に未掲載で OSV は検知しない。
+        // 上流(fastify/fast-uri)の v3.1.7 リリースノートを根拠に先行して上げる。
+        "fast-uri" to "3.1.7",
         "flatted" to "3.4.2", // GHSA-25h7-pfq9-p65f / GHSA-rf6f-7fwh-wjgh
         "follow-redirects" to "1.16.0", // GHSA-r4q5-vmmm-2653
         "http-proxy-middleware" to "2.0.10", // GHSA-64mm-vxmg-q3vj
@@ -88,6 +91,8 @@ val jsYarnResolutions =
         "shell-quote" to "1.9.0", // GHSA-w7jw-789q-3m8p / GHSA-395f-4hp3-45gv
         "socket.io-parser" to "4.2.7", // GHSA-677m-j7p3-52f9 / GHSA-2m8v-j782-fhvr
         "tmp" to "0.2.7", // GHSA-ph9p-34f9-6g65 / GHSA-7c78-jf6q-g5cm
+        // GHSA-qmq6-f8pr-cx5x(low / Duplicate Advisory)は 14.0.0 でしか修正されず、
+        // resolution でのメジャー跨ぎは webpack 系ビルドツールを壊すリスクが大きいため見送る。
         "uuid" to "11.1.1", // GHSA-w5hq-g745-h8pq
         "webpack" to "5.104.1", // GHSA-38r7-794h-5758 / GHSA-8fgc-7cc6-rx7x
         "webpack-dev-server" to "5.2.6", // GHSA-79cf-xcqc-c78w / GHSA-mx8g-39q3-5c79 / GHSA-f5vj-f2hx-8m93
