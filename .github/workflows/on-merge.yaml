@@ -1,14 +1,19 @@
-name: on-pull-request
+name: on-merge
 
+# setup-gradle はデフォルトブランチの run でのみキャッシュを書き込む
+# (それ以外のブランチは cache-read-only)。main で一度ビルドしておかないと
+# PR の run が常にキャッシュ無しになるため、seed 目的で check を回す。
 on:
-  pull_request:
+  push:
+    branches: [main]
 
 permissions: {}
 
 jobs:
-  check:
+  seed-cache:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     permissions:
       contents: read
 
