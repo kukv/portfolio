@@ -24,14 +24,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Gradle Cache
-        # $/ 記法は actionlint(v1.7.12)が構文エラーにするため ./ のままにする
-        uses: ./.github/actions/gradle-cache # zizmor: ignore[self-repository]
-
-      - name: Check with Gradle
-        uses: ./.github/actions/gradle-action # zizmor: ignore[self-repository]
+      - name: Set up JDK
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
-          command: wasmJsBrowserDistribution
+          distribution: corretto
+          java-version: "25"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          # 出荷物をビルドする run では、PR 由来のキャッシュを読ませない
+          # (cache poisoning 対策)
+          cache-disabled: true
+
+      - name: Build with Gradle
+        run: ./gradlew wasmJsBrowserDistribution
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
