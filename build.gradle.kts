@@ -88,10 +88,12 @@ val jsYarnResolutions =
         "node-forge" to "1.4.0", // GHSA-2328-f5f3-gj25
         "path-to-regexp" to "0.1.13", // GHSA-37ch-88jc-xwx2
         "picomatch" to "2.3.2", // GHSA-3v7f-55p6-f55p
+        "proxy-addr" to "2.0.8", // GHSA-jqcg-44mw-7w3h
         "qs" to "6.16.0", // GHSA-q8mj-m7cp-5q26 / GHSA-4mjr-xmp4-gh2g
         "serialize-javascript" to "7.0.5", // GHSA-5c6j-r48x-rmvq / GHSA-qj8w-gfj5-8c6v
-        "shell-quote" to "1.9.0", // GHSA-w7jw-789q-3m8p / GHSA-395f-4hp3-45gv
+        "shell-quote" to "1.11.0", // GHSA-w7jw-789q-3m8p / GHSA-395f-4hp3-45gv / GHSA-pqg4-j6r4-53mv
         "socket.io-parser" to "4.2.7", // GHSA-677m-j7p3-52f9 / GHSA-2m8v-j782-fhvr
+        "source-map-js" to "1.2.2", // GHSA-68fv-2mgg-jv7q
         "tmp" to "0.2.7", // GHSA-ph9p-34f9-6g65 / GHSA-7c78-jf6q-g5cm
         // GHSA-qmq6-f8pr-cx5x(low / Duplicate Advisory)は 14.0.0 でしか修正されず、
         // resolution でのメジャー跨ぎは webpack 系ビルドツールを壊すリスクが大きいため見送る。
