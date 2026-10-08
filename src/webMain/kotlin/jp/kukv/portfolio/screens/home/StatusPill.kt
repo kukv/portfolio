@@ -20,6 +20,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import portfolio.generated.resources.Res
+import portfolio.generated.resources.home_status
 
 @Composable
 fun StatusPill() {
@@ -55,7 +58,7 @@ fun StatusPill() {
                     ),
         )
         Text(
-            text = "Available for new opportunities",
+            text = stringResource(Res.string.home_status),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.primary,
         )

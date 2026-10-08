@@ -147,9 +147,8 @@ private fun MainContent(
                 .verticalScroll(scrollState),
     ) {
         HomeScreen(
-            modifier = Modifier.trackPosition(Section.Home, sectionPositions),
             onNavigate = onNavigate,
-            topPadding = padding.calculateTopPadding(),
+            modifier = Modifier.trackPosition(Section.Home, sectionPositions),
         )
         AboutScreen(modifier = Modifier.trackPosition(Section.About, sectionPositions))
         ShowcaseScreen(modifier = Modifier.trackPosition(Section.Showcase, sectionPositions))
