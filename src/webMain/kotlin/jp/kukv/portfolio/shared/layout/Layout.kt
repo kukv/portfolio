@@ -55,6 +55,8 @@ fun MobileLayout(
                 },
                 isDarkTheme = appViewModel.isDarkTheme,
                 onThemeChange = { appViewModel.setDarkTheme(it) },
+                language = appViewModel.language,
+                onLanguageChange = { appViewModel.setLanguage(it) },
             )
         },
     ) {
@@ -96,6 +98,8 @@ fun DesktopLayout(
                 onNavigate = ::navigate,
                 isDarkTheme = appViewModel.isDarkTheme,
                 onThemeChange = { appViewModel.setDarkTheme(it) },
+                language = appViewModel.language,
+                onLanguageChange = { appViewModel.setLanguage(it) },
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },

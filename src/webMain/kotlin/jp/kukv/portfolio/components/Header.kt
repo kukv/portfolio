@@ -3,8 +3,10 @@ package jp.kukv.portfolio.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import jp.kukv.portfolio.shared.i18n.AppLanguage
 import jp.kukv.portfolio.shared.layout.Section
 import org.jetbrains.compose.resources.stringResource
 import portfolio.generated.resources.Res
@@ -62,6 +65,8 @@ fun DesktopHeader(
     onNavigate: (Section) -> Unit,
     isDarkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit,
+    language: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
 ) {
     Surface(
         shadowElevation = 4.dp,
@@ -86,6 +91,8 @@ fun DesktopHeader(
                     TextButton(onClick = { onNavigate(section) }) { Text(stringResource(section.label)) }
                 }
             }
+            LanguageToggle(language = language, onLanguageChange = onLanguageChange)
+            Spacer(modifier = Modifier.width(8.dp))
             ThemeToggle(isDarkTheme = isDarkTheme, onThemeChange = onThemeChange)
         }
     }

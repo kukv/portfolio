@@ -1,7 +1,8 @@
 package jp.kukv.portfolio.components
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import jp.kukv.portfolio.shared.i18n.AppLanguage
 import jp.kukv.portfolio.shared.layout.Section
 import org.jetbrains.compose.resources.stringResource
 import portfolio.generated.resources.Res
@@ -27,6 +29,8 @@ fun NavigationDrawer(
     onNavigate: (Section) -> Unit,
     isDarkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit,
+    language: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxHeight().width(280.dp),
@@ -50,10 +54,12 @@ fun NavigationDrawer(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            Box(
+            Row(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-                contentAlignment = Alignment.CenterEnd,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+                LanguageToggle(language = language, onLanguageChange = onLanguageChange)
                 ThemeToggle(isDarkTheme = isDarkTheme, onThemeChange = onThemeChange)
             }
         }

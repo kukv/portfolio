@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio</title>
+    <script>
+        // Compose Resources の言語をその場で切り替えるための上書き(公式ドキュメントの一時的な回避策)。
+        // window.__customLocale は shared/i18n/AppEnvironment.kt が設定する。
+        var currentLanguagesImplementation = Object.getOwnPropertyDescriptor(Navigator.prototype, "languages");
+        var newLanguagesImplementation = Object.assign({}, currentLanguagesImplementation, {
+            get: function () {
+                if (window.__customLocale) {
+                    return [window.__customLocale];
+                } else {
+                    return currentLanguagesImplementation.get.apply(this);
+                }
+            }
+        });
+        Object.defineProperty(Navigator.prototype, "languages", newLanguagesImplementation);
+    </script>
     <link type="text/css" rel="stylesheet" href="styles.css">
 </head>
 <body style="text-align: center; align-content: center">

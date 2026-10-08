@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import jp.kukv.portfolio.shared.i18n.AppEnvironment
 import jp.kukv.portfolio.shared.layout.DesktopLayout
 import jp.kukv.portfolio.shared.layout.LayoutSize
 import jp.kukv.portfolio.shared.layout.MobileLayout
@@ -21,9 +22,12 @@ fun App() {
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppTheme(viewModel) {
-        when (currentLayoutSize()) {
-            LayoutSize.Compact -> MobileLayout(scrollState, sectionPositions, snackbarHostState)
-            else -> DesktopLayout(scrollState, sectionPositions, snackbarHostState)
+        AppEnvironment(viewModel.language) {
+            DocumentMetadata(viewModel.language)
+            when (currentLayoutSize()) {
+                LayoutSize.Compact -> MobileLayout(scrollState, sectionPositions, snackbarHostState)
+                else -> DesktopLayout(scrollState, sectionPositions, snackbarHostState)
+            }
         }
     }
 }
