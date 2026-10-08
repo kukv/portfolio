@@ -1,0 +1,15 @@
+# 修正版が存在しない脆弱性の一時的な除外。
+# いずれも kotlin-js-store/yarn.lock の開発ビルドツール(webpack / webpack-dev-server)経由の
+# 依存で、配信される成果物には含まれない。ignoreUntil を過ぎたら修正版の有無を再確認すること。
+
+[[IgnoredVulns]]
+# braces 3.0.3(最新)まで影響。chokidar / micromatch 経由。
+id = "GHSA-vfj7-8cjw-p6xm"
+ignoreUntil = 2027-01-08
+reason = "修正版未リリース。webpack の watch / glob 処理経由の開発時のみの依存"
+
+[[IgnoredVulns]]
+# node-forge 1.4.0(最新)まで影響。webpack-dev-server → selfsigned 経由。
+id = "GHSA-86w9-cpqp-85rv"
+ignoreUntil = 2027-01-08
+reason = "修正版未リリース。dev server の自己署名証明書生成でのみ使われ、署名検証には使われない"
