@@ -33,7 +33,7 @@
 - **設定の保持**: `AppViewModel` で「テーマ」と「言語」の 2 つの設定を管理する。
   - 初期値: `localStorage` に保存値があればそれを使い、なければブラウザの設定（テーマは `prefers-color-scheme`、言語は `navigator.language`）に従う。
   - ユーザーが切り替えたら `localStorage` に保存する。
-  - ブラウザ API は既存の `shared/lib/BrowserUtils` の expect / actual（js / wasmJs）に追加する。
+  - ブラウザ API は `shared/lib/Browser.kt`（webMain）に `js()` で書く。Kotlin 2.4 では webMain から `js()` を js / wasmJs 共通で使えることを確認済みのため、expect / actual は増やさない。
 - **index.html**: 言語を切り替えたら `<html lang>` と `document.title` を更新する。
 - **対象外**: 依存ライブラリのバージョン更新（Renovate に任せる）。Showcase と Contact の作り直し（③ と ④ で行う）。
 
@@ -84,7 +84,7 @@ Compose の Web 版は canvas に描画するため、検索エンジンや SNS 
 - `<title>` と `<meta name="description">` に、名前と看板の一言を入れる。
 - OGP タグと Twitter Card のタグ、共有用の画像 1 枚（1200×630）を用意する。
 - JSON-LD の `Person` 構造化データ（名前、肩書き、`sameAs` に GitHub などのアカウント）を入れる。
-- 自己紹介の要約を HTML のテキストとして `<div id="static-summary">` に置く（読み込み中の表示を兼ねる）。アプリの起動が終わったら Kotlin 側でこの要素を削除する。JavaScript が無効な環境向けに、同じ内容を `<noscript>` にも置く。
+- 自己紹介の要約を HTML のテキストとして `<div id="static-summary">` に置く（読み込み中の表示を兼ねる）。アプリの起動が終わったら Kotlin 側でこの要素を削除する。JavaScript が無効な環境ではこの要素がそのまま残るので、`<noscript>` には JavaScript が必要である旨の案内だけを置く。
 - 静的な HTML は言語切り替えに対応しないため、日英を併記する。
 - 文言は ② で確定させる。① では枠組みと暫定の文言を入れる。
 
