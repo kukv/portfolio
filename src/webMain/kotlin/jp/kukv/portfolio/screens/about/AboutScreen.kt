@@ -26,7 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppViewModel
+import jp.kukv.portfolio.shared.layout.LayoutSize
+import jp.kukv.portfolio.shared.layout.currentLayoutSize
 import kotlin.collections.chunked
 import kotlin.collections.forEach
 
@@ -102,8 +103,7 @@ private val skillCategories =
 
 @Composable
 fun SkillAndStacksSection() {
-    val appViewModel = LocalAppViewModel.current
-    val windowSizeState = appViewModel.windowSizeState
+    val layoutSize = currentLayoutSize()
 
     val scope = remember { skillCategories }
 
@@ -113,7 +113,7 @@ fun SkillAndStacksSection() {
         color = MaterialTheme.colorScheme.onBackground,
     )
     Spacer(modifier = Modifier.height(32.dp))
-    if (windowSizeState.isMobile) {
+    if (layoutSize == LayoutSize.Compact) {
         Column(
             modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -153,7 +153,7 @@ fun SkillAndStacksSection() {
                 }
             }
         }
-    } else if (windowSizeState.isTablet) {
+    } else if (layoutSize == LayoutSize.Medium) {
         Column(
             modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp),

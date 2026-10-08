@@ -16,8 +16,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import jp.kukv.portfolio.app.LocalAppViewModel
+import jp.kukv.portfolio.shared.layout.LayoutSize
 import jp.kukv.portfolio.shared.layout.Section
+import jp.kukv.portfolio.shared.layout.currentLayoutSize
 
 @Composable
 fun HomeScreen(
@@ -25,8 +26,7 @@ fun HomeScreen(
     onNavigate: (Section) -> Unit,
     topPadding: Dp = 0.dp,
 ) {
-    val appViewModel = LocalAppViewModel.current
-    val windowSizeState = appViewModel.windowSizeState
+    val layoutSize = currentLayoutSize()
 
     val density = LocalDensity.current
     val windowInfo = LocalWindowInfo.current
@@ -41,7 +41,7 @@ fun HomeScreen(
         contentAlignment = Alignment.Center,
     ) {
         when {
-            windowSizeState.isDesktop -> DesktopIntroduction(onNavigate)
+            layoutSize == LayoutSize.Expanded -> DesktopIntroduction(onNavigate)
             else -> MobileTabletIntroduction(onNavigate)
         }
     }

@@ -37,7 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jp.kukv.portfolio.app.LocalAppViewModel
+import jp.kukv.portfolio.shared.layout.LayoutSize
+import jp.kukv.portfolio.shared.layout.currentLayoutSize
 
 @Immutable
 data class Project(
@@ -218,9 +219,9 @@ private val projects =
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ShowcaseScreen(modifier: Modifier = Modifier) {
-    val appViewModel = LocalAppViewModel.current
-    val isMobile = appViewModel.windowSizeState.isMobile
-    val isTablet = appViewModel.windowSizeState.isTablet
+    val layoutSize = currentLayoutSize()
+    val isMobile = layoutSize == LayoutSize.Compact
+    val isTablet = layoutSize == LayoutSize.Medium
     val viewModel: ShowcaseViewModel = viewModel { ShowcaseViewModel() }
 
     Column(

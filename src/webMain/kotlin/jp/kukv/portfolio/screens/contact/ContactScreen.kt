@@ -23,7 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import jp.kukv.portfolio.app.LocalAppViewModel
+import jp.kukv.portfolio.shared.layout.LayoutSize
+import jp.kukv.portfolio.shared.layout.currentLayoutSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,8 +32,7 @@ fun ContactScreen(
     onShowSnackbar: suspend (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val appViewModel = LocalAppViewModel.current
-    val isMobile = appViewModel.windowSizeState.isMobile
+    val isMobile = currentLayoutSize() == LayoutSize.Compact
     val viewModel: ContactViewModel = viewModel { ContactViewModel() }
 
     Column(
