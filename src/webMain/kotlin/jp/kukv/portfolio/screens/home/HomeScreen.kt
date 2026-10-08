@@ -57,16 +57,10 @@ private fun ExpandedBento(onNavigate: (Section) -> Unit) {
                     )
                     AiTile(index = 2, modifier = Modifier.weight(1f).fillMaxHeight())
                 }
-                BentoRow {
-                    NowBuildingTile(index = 3, modifier = Modifier.weight(1f).fillMaxHeight())
-                    StatusTile(index = 4, modifier = Modifier.weight(1f).fillMaxHeight())
-                }
+                NowBuildingTile(index = 3, modifier = Modifier.fillMaxWidth())
             }
         }
-        BentoRow {
-            ShowcaseTile(index = 5, onNavigate = onNavigate, modifier = Modifier.weight(1f).fillMaxHeight())
-            ContactTile(index = 6, onNavigate = onNavigate, modifier = Modifier.weight(1f).fillMaxHeight())
-        }
+        LinkRow(onNavigate)
     }
 }
 
@@ -86,11 +80,22 @@ private fun MediumBento(onNavigate: (Section) -> Unit) {
             AiTile(index = 2, modifier = Modifier.weight(1f).fillMaxHeight())
             NowBuildingTile(index = 3, modifier = Modifier.weight(1f).fillMaxHeight())
         }
-        StatusTile(index = 4, modifier = Modifier.fillMaxWidth())
-        BentoRow {
-            ShowcaseTile(index = 5, onNavigate = onNavigate, modifier = Modifier.weight(1f).fillMaxHeight())
-            ContactTile(index = 6, onNavigate = onNavigate, modifier = Modifier.weight(1f).fillMaxHeight())
-        }
+        LinkRow(onNavigate)
+    }
+}
+
+/**
+ * Showcase と Contact へのリンクタイルの行。どちらも 1 行なので高さはそろえない。
+ * IntrinsicSize.Min の行に入れると日本語のラベルが描画されなくなるため、BentoRow は使わない。
+ */
+@Composable
+private fun LinkRow(onNavigate: (Section) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Gap),
+    ) {
+        ShowcaseTile(index = 4, onNavigate = onNavigate, modifier = Modifier.weight(1f))
+        ContactTile(index = 5, onNavigate = onNavigate, modifier = Modifier.weight(1f))
     }
 }
 
@@ -98,13 +103,12 @@ private fun MediumBento(onNavigate: (Section) -> Unit) {
 @Composable
 private fun CompactBento(onNavigate: (Section) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(Gap)) {
-        NameTile(index = 0, modifier = Modifier.fillMaxWidth().height(220.dp))
+        NameTile(index = 0, modifier = Modifier.fillMaxWidth().height(260.dp))
         PhotoTile(index = 1, imageModifier = Modifier.size(200.dp), modifier = Modifier.fillMaxWidth())
         AiTile(index = 2, modifier = Modifier.fillMaxWidth())
         NowBuildingTile(index = 3, modifier = Modifier.fillMaxWidth())
-        StatusTile(index = 4, modifier = Modifier.fillMaxWidth())
-        ShowcaseTile(index = 5, onNavigate = onNavigate, modifier = Modifier.fillMaxWidth())
-        ContactTile(index = 6, onNavigate = onNavigate, modifier = Modifier.fillMaxWidth())
+        ShowcaseTile(index = 4, onNavigate = onNavigate, modifier = Modifier.fillMaxWidth())
+        ContactTile(index = 5, onNavigate = onNavigate, modifier = Modifier.fillMaxWidth())
     }
 }
 

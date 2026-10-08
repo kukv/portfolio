@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +42,7 @@ fun NameTile(
     modifier: Modifier = Modifier,
 ) {
     BentoTile(index = index, modifier = modifier, containerColor = MaterialTheme.colorScheme.primary) {
+        StatusPill(color = LocalContentColor.current)
         Spacer(modifier = Modifier.weight(1f))
         Text(stringResource(Res.string.home_greeting), style = MaterialTheme.typography.titleMedium)
         Text(
@@ -108,18 +110,6 @@ private fun MessageTile(
         Text(stringResource(title), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         Text(stringResource(body), style = MaterialTheme.typography.bodyMedium)
-    }
-}
-
-@Composable
-fun StatusTile(
-    index: Int,
-    modifier: Modifier = Modifier,
-) {
-    BentoTile(index = index, modifier = modifier, containerColor = MaterialTheme.colorScheme.surfaceContainer) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
-            StatusPill()
-        }
     }
 }
 

@@ -19,13 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import portfolio.generated.resources.Res
 import portfolio.generated.resources.home_status
 
 @Composable
-fun StatusPill() {
+fun StatusPill(color: Color = MaterialTheme.colorScheme.primary) {
     val infiniteTransition = rememberInfiniteTransition(label = "statusPulse")
     val dotAlpha by infiniteTransition.animateFloat(
         initialValue = 1f,
@@ -42,7 +43,7 @@ fun StatusPill() {
             Modifier
                 .border(
                     width = 1.dp,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                    color = color.copy(alpha = 0.3f),
                     shape = CircleShape,
                 ).padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -53,14 +54,14 @@ fun StatusPill() {
                 Modifier
                     .size(6.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = dotAlpha),
+                        color = color.copy(alpha = dotAlpha),
                         shape = CircleShape,
                     ),
         )
         Text(
             text = stringResource(Res.string.home_status),
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.primary,
+            color = color,
         )
     }
 }

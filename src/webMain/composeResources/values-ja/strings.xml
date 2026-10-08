@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_title">Nonaka Koki | ソフトウェアエンジニア</string>
-    <string name="header_title">ポートフォリオ</string>
-    <string name="nav_home">ホーム</string>
-    <string name="nav_about">自己紹介</string>
-    <string name="nav_showcase">作品</string>
-    <string name="nav_contact">連絡先</string>
+    <string name="header_title">Portfolio</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_about">About</string>
+    <string name="nav_showcase">Showcase</string>
+    <string name="nav_contact">Contact</string>
     <string name="menu">メニュー</string>
     <string name="toggle_theme">テーマを切り替え</string>
 
