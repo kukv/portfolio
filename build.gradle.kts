@@ -16,7 +16,11 @@ kotlin {
     jvmToolchain(javaVersion.toInt())
 
     js(IR) {
-        browser()
+        browser {
+            // karma が上記 resolutions で固定した minimatch 9.x と非互換で起動できないため、
+            // js のブラウザテストは無効化し、テストは wasmJs で実行する。
+            testTask { enabled = false }
+        }
         binaries.executable()
     }
 
