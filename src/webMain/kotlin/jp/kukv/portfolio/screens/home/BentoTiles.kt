@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import jp.kukv.portfolio.shared.layout.Section
 import org.jetbrains.compose.resources.StringResource
@@ -36,13 +37,21 @@ import portfolio.generated.resources.home_now_body
 import portfolio.generated.resources.home_now_title
 import portfolio.generated.resources.home_role
 
+/** 名前・肩書き・写真・ステータスをまとめた自己紹介のタイル。 */
 @Composable
 fun NameTile(
     index: Int,
+    photoSize: Dp,
     modifier: Modifier = Modifier,
 ) {
     BentoTile(index = index, modifier = modifier, containerColor = MaterialTheme.colorScheme.primary) {
-        StatusPill(color = LocalContentColor.current)
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+            Box(modifier = Modifier.weight(1f)) {
+                StatusPill(color = LocalContentColor.current)
+            }
+            ProfileImage(modifier = Modifier.size(photoSize))
+        }
+        Spacer(modifier = Modifier.height(24.dp))
         Spacer(modifier = Modifier.weight(1f))
         Text(stringResource(Res.string.home_greeting), style = MaterialTheme.typography.titleMedium)
         Text(
@@ -52,19 +61,6 @@ fun NameTile(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(stringResource(Res.string.home_role), style = MaterialTheme.typography.titleMedium)
-    }
-}
-
-@Composable
-fun PhotoTile(
-    index: Int,
-    imageModifier: Modifier,
-    modifier: Modifier = Modifier,
-) {
-    BentoTile(index = index, modifier = modifier) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            ProfileImage(modifier = imageModifier)
-        }
     }
 }
 

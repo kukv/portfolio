@@ -18,7 +18,7 @@ import jp.kukv.portfolio.shared.lib.removeElementById
 @Composable
 fun App() {
     val viewModel: AppViewModel = viewModel { AppViewModel() }
-    LaunchedEffect(Unit) { removeElementById("static-summary") }
+    LaunchedEffect(Unit) { removeElementById("loading") }
 
     val scrollState = remember { ScrollState(0) }
     val sectionPositions = remember { mutableStateMapOf<Section, Int>() }

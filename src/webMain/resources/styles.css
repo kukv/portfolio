@@ -6,6 +6,13 @@ html, body {
     overflow: hidden;
 }
 
+#loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
 #static-summary {
     font-family: system-ui, -apple-system, "Hiragino Sans", sans-serif;
     max-width: 640px;
