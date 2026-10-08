@@ -3,7 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
+    <title>Nonaka Koki | Software Engineer</title>
+    <meta name="description" content="Nonaka Koki (kukv) is a software engineer who builds with AI agents, designing agent-driven development workflows to ship fast without cutting corners. AI エージェントを前提にした開発の進め方を組み立て、速く、品質を落とさずに作るソフトウェアエンジニア。">
+    <link rel="canonical" href="https://kukv.jp/">
+
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://kukv.jp/">
+    <meta property="og:site_name" content="Nonaka Koki">
+    <meta property="og:title" content="Nonaka Koki | Software Engineer">
+    <meta property="og:description" content="A software engineer who builds with AI agents. AI と一緒に開発するソフトウェアエンジニア。">
+    <meta property="og:image" content="https://kukv.jp/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@kukv">
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Nonaka Koki",
+            "alternateName": "kukv",
+            "url": "https://kukv.jp/",
+            "image": "https://kukv.jp/og-image.png",
+            "jobTitle": "Software Engineer",
+            "description": "A software engineer who builds with AI agents.",
+            "sameAs": [
+                "https://github.com/kukv",
+                "https://x.com/kukv",
+                "https://bsky.app/profile/kukv.jp",
+                "https://www.instagram.com/kukv",
+                "https://www.facebook.com/04x17"
+            ]
+        }
+    </script>
+
     <script>
         // Compose Resources の言語をその場で切り替えるための上書き(公式ドキュメントの一時的な回避策)。
         // window.__customLocale は shared/i18n/AppEnvironment.kt が設定する。
@@ -21,13 +57,18 @@
     </script>
     <link type="text/css" rel="stylesheet" href="styles.css">
 </head>
-<body style="text-align: center; align-content: center">
-<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 50 50" role="presentation">
-    <circle cx="25" cy="25" r="20" stroke="#ccc" stroke-width="4" fill="none"/>
-    <circle cx="25" cy="25" r="20" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="90 125">
-        <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
-    </circle>
-</svg>
+<body>
+<!-- アプリの起動後に App.kt が削除する。起動前の表示とクローラー向けの要約を兼ねる。 -->
+<main id="static-summary">
+    <h1>Nonaka Koki</h1>
+    <p>Software Engineer / ソフトウェアエンジニア</p>
+    <p>I build with AI agents, designing agent-driven development workflows to ship fast without cutting corners.</p>
+    <p>AI エージェントを前提にした開発の進め方を組み立て、速く、品質を落とさずに作っています。</p>
+    <p><a href="https://github.com/kukv">GitHub</a> · <a href="https://x.com/kukv">X</a> · <a href="https://bsky.app/profile/kukv.jp">Bluesky</a></p>
+</main>
+<noscript>
+    <p>This site requires JavaScript. このサイトの表示には JavaScript が必要です。</p>
+</noscript>
 <script type="application/javascript" src="portfolio.js"></script>
 </body>
 </html>
