@@ -46,7 +46,7 @@ fun NameTile(
         Text(
             stringResource(Res.string.home_name),
             style = MaterialTheme.typography.displayMedium,
-            fontWeight = FontWeight.ExtraBold,
+            fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(stringResource(Res.string.home_role), style = MaterialTheme.typography.titleMedium)
