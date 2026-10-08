@@ -39,6 +39,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jp.kukv.portfolio.shared.layout.LayoutSize
 import jp.kukv.portfolio.shared.layout.currentLayoutSize
+import org.jetbrains.compose.resources.stringResource
+import portfolio.generated.resources.Res
+import portfolio.generated.resources.showcase_added
+import portfolio.generated.resources.showcase_close
+import portfolio.generated.resources.showcase_coming_soon
+import portfolio.generated.resources.showcase_image_placeholder
+import portfolio.generated.resources.showcase_more
+import portfolio.generated.resources.showcase_technologies
+import portfolio.generated.resources.showcase_title
+import portfolio.generated.resources.showcase_url
 
 @Immutable
 data class Project(
@@ -232,7 +242,7 @@ fun ShowcaseScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Showcase",
+            text = stringResource(Res.string.showcase_title),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )
@@ -284,7 +294,7 @@ fun ShowcaseScreen(modifier: Modifier = Modifier) {
         if (projects.size > viewModel.visibleCount) {
             Spacer(modifier = Modifier.height(32.dp))
             Button(onClick = { viewModel.loadMore() }) {
-                Text("More")
+                Text(stringResource(Res.string.showcase_more))
             }
         }
     }
@@ -335,16 +345,16 @@ private fun ProjectCard(
             ) {
                 if (project != null) {
                     // TODO: project.imageUrl を使用した実際の画像表示に置き換える
-                    Text("Image Placeholder")
+                    Text(stringResource(Res.string.showcase_image_placeholder))
                 } else {
-                    Text("Coming Soon", style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(Res.string.showcase_coming_soon), style = MaterialTheme.typography.titleMedium)
                 }
             }
             if (project != null) {
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     Text(text = project.name, style = MaterialTheme.typography.titleLarge)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "Added: ${project.addedDate}", style = MaterialTheme.typography.bodySmall)
+                    Text(text = stringResource(Res.string.showcase_added, project.addedDate), style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
@@ -371,17 +381,20 @@ private fun ProjectDetailBottomSheet(
         ) {
             Text(text = project.name, style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Technologies: ${project.technologies.joinToString(", ")}", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = stringResource(Res.string.showcase_technologies, project.technologies.joinToString(", ")),
+                style = MaterialTheme.typography.bodyMedium,
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Added: ${project.addedDate}", style = MaterialTheme.typography.bodySmall)
+            Text(text = stringResource(Res.string.showcase_added, project.addedDate), style = MaterialTheme.typography.bodySmall)
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = project.description, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(16.dp))
             // TODO: クリッカブルなリンクに変更する（例: kotlinx.browser.window.open(project.url, "_blank")）
-            Text(text = "URL: ${project.url}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = stringResource(Res.string.showcase_url, project.url), style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) {
-                Text("Close")
+                Text(stringResource(Res.string.showcase_close))
             }
         }
     }

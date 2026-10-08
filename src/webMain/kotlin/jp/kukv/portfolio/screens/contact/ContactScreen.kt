@@ -25,6 +25,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jp.kukv.portfolio.shared.layout.LayoutSize
 import jp.kukv.portfolio.shared.layout.currentLayoutSize
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+import portfolio.generated.resources.Res
+import portfolio.generated.resources.contact_company
+import portfolio.generated.resources.contact_description
+import portfolio.generated.resources.contact_email
+import portfolio.generated.resources.contact_first_name
+import portfolio.generated.resources.contact_last_name
+import portfolio.generated.resources.contact_message
+import portfolio.generated.resources.contact_privacy
+import portfolio.generated.resources.contact_sent
+import portfolio.generated.resources.contact_submit
+import portfolio.generated.resources.contact_title
+import portfolio.generated.resources.error_invalid_email
+import portfolio.generated.resources.error_max_100
+import portfolio.generated.resources.error_max_254
+import portfolio.generated.resources.error_max_500
+import portfolio.generated.resources.error_required
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,13 +61,13 @@ fun ContactScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "contact us",
+            text = stringResource(Res.string.contact_title),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Please fill out the form below to get in touch with us.",
+            text = stringResource(Res.string.contact_description),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
@@ -69,13 +87,19 @@ fun ContactScreen(
                 OutlinedTextField(
                     value = viewModel.company,
                     onValueChange = { viewModel.updateCompany(it) },
-                    label = { Text("Company*") },
+                    label = { Text(stringResource(Res.string.contact_company)) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = viewModel.company.isNotEmpty() && !viewModel.isCompanyValid,
                     supportingText = {
                         if (viewModel.company.isNotEmpty() && !viewModel.isCompanyValid) {
                             Text(
-                                if (viewModel.company.isBlank()) "Required" else "Max 100 characters",
+                                if (viewModel.company.isBlank()) {
+                                    stringResource(
+                                        Res.string.error_required,
+                                    )
+                                } else {
+                                    stringResource(Res.string.error_max_100)
+                                },
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
@@ -85,16 +109,16 @@ fun ContactScreen(
                 OutlinedTextField(
                     value = viewModel.email,
                     onValueChange = { viewModel.updateEmail(it) },
-                    label = { Text("Email*") },
+                    label = { Text(stringResource(Res.string.contact_email)) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = viewModel.email.isNotEmpty() && !viewModel.isEmailValid,
                     supportingText = {
                         if (viewModel.email.isNotEmpty() && !viewModel.isEmailValid) {
                             val errorText =
                                 when {
-                                    viewModel.email.isBlank() -> "Required"
-                                    viewModel.email.length > 254 -> "Max 254 characters"
-                                    else -> "Invalid email format"
+                                    viewModel.email.isBlank() -> stringResource(Res.string.error_required)
+                                    viewModel.email.length > 254 -> stringResource(Res.string.error_max_254)
+                                    else -> stringResource(Res.string.error_invalid_email)
                                 }
                             Text(errorText, color = MaterialTheme.colorScheme.error)
                         }
@@ -104,14 +128,20 @@ fun ContactScreen(
                 OutlinedTextField(
                     value = viewModel.message,
                     onValueChange = { viewModel.updateMessage(it) },
-                    label = { Text("Message*") },
+                    label = { Text(stringResource(Res.string.contact_message)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3,
                     isError = viewModel.message.isNotEmpty() && !viewModel.isMessageValid,
                     supportingText = {
                         if (viewModel.message.isNotEmpty() && !viewModel.isMessageValid) {
                             Text(
-                                if (viewModel.message.isBlank()) "Required" else "Max 500 characters",
+                                if (viewModel.message.isBlank()) {
+                                    stringResource(
+                                        Res.string.error_required,
+                                    )
+                                } else {
+                                    stringResource(Res.string.error_max_500)
+                                },
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
@@ -128,7 +158,7 @@ fun ContactScreen(
                         onCheckedChange = { viewModel.updateAgreedToPrivacyPolicy(it) },
                     )
                     Text(
-                        text = "By selecting this, you agree to our privacy policy.",
+                        text = stringResource(Res.string.contact_privacy),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
@@ -136,7 +166,7 @@ fun ContactScreen(
                 Button(
                     onClick = {
                         viewModel.submit(
-                            onSuccess = { onShowSnackbar("Message sent successfully!") },
+                            onSuccess = { onShowSnackbar(getString(Res.string.contact_sent)) },
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -149,7 +179,7 @@ fun ContactScreen(
                             strokeWidth = 2.dp,
                         )
                     } else {
-                        Text("Submit")
+                        Text(stringResource(Res.string.contact_submit))
                     }
                 }
             }
@@ -184,13 +214,19 @@ private fun FirstNameField(
     OutlinedTextField(
         value = viewModel.firstName,
         onValueChange = { viewModel.updateFirstName(it) },
-        label = { Text("First name*") },
+        label = { Text(stringResource(Res.string.contact_first_name)) },
         modifier = modifier,
         isError = viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid,
         supportingText = {
             if (viewModel.firstName.isNotEmpty() && !viewModel.isFirstNameValid) {
                 Text(
-                    if (viewModel.firstName.isBlank()) "Required" else "Max 100 characters",
+                    if (viewModel.firstName.isBlank()) {
+                        stringResource(
+                            Res.string.error_required,
+                        )
+                    } else {
+                        stringResource(Res.string.error_max_100)
+                    },
                     color = MaterialTheme.colorScheme.error,
                 )
             }
@@ -206,13 +242,19 @@ private fun LastNameField(
     OutlinedTextField(
         value = viewModel.lastName,
         onValueChange = { viewModel.updateLastName(it) },
-        label = { Text("Last name*") },
+        label = { Text(stringResource(Res.string.contact_last_name)) },
         modifier = modifier,
         isError = viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid,
         supportingText = {
             if (viewModel.lastName.isNotEmpty() && !viewModel.isLastNameValid) {
                 Text(
-                    if (viewModel.lastName.isBlank()) "Required" else "Max 100 characters",
+                    if (viewModel.lastName.isBlank()) {
+                        stringResource(
+                            Res.string.error_required,
+                        )
+                    } else {
+                        stringResource(Res.string.error_max_100)
+                    },
                     color = MaterialTheme.colorScheme.error,
                 )
             }

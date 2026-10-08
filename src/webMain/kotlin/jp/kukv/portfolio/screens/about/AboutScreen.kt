@@ -28,6 +28,8 @@ import jp.kukv.portfolio.shared.layout.LayoutSize
 import jp.kukv.portfolio.shared.layout.currentLayoutSize
 import org.jetbrains.compose.resources.stringResource
 import portfolio.generated.resources.Res
+import portfolio.generated.resources.about_title
+import portfolio.generated.resources.experience_title
 import portfolio.generated.resources.skills_title
 
 data class SkillCategory(val label: String, val skills: List<String>)
@@ -63,7 +65,7 @@ fun AboutScreen(modifier: Modifier = Modifier) {
 @Composable
 fun AboutMeSection() {
     Text(
-        text = "About Me",
+        text = stringResource(Res.string.about_title),
         style = MaterialTheme.typography.headlineLarge,
         color = MaterialTheme.colorScheme.onBackground,
     )
@@ -167,7 +169,7 @@ fun ExperienceSection() {
     val scope = remember { experiences }
 
     Text(
-        text = "Experience",
+        text = stringResource(Res.string.experience_title),
         style = MaterialTheme.typography.headlineLarge,
         color = MaterialTheme.colorScheme.onBackground,
     )
