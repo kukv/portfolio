@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -21,6 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import jp.kukv.portfolio.shared.layout.Section
+import org.jetbrains.compose.resources.stringResource
+import portfolio.generated.resources.Res
+import portfolio.generated.resources.header_title
+import portfolio.generated.resources.menu
+import portfolio.generated.resources.toggle_theme
 
 @Composable
 fun MobileHeader(onMenuOpen: () -> Unit) {
@@ -40,11 +45,11 @@ fun MobileHeader(onMenuOpen: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu",
+                    contentDescription = stringResource(Res.string.menu),
                 )
             }
             Text(
-                "Portfolio",
+                stringResource(Res.string.header_title),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.align(Alignment.Center),
             )
@@ -54,8 +59,7 @@ fun MobileHeader(onMenuOpen: () -> Unit) {
 
 @Composable
 fun DesktopHeader(
-    onNavigate: (String) -> Unit,
-    isTablet: Boolean,
+    onNavigate: (Section) -> Unit,
     isDarkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit,
 ) {
@@ -71,41 +75,34 @@ fun DesktopHeader(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                "Portfolio",
+                stringResource(Res.string.header_title),
                 style = MaterialTheme.typography.titleLarge,
             )
             Row(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                TextButton(onClick = { onNavigate("home") }) { Text("Home") }
-                TextButton(onClick = { onNavigate("about") }) { Text("About") }
-                TextButton(onClick = { onNavigate("showcase") }) { Text("Showcase") }
-                TextButton(onClick = { onNavigate("contact") }) { Text("Contact") }
-            }
-            if (!isTablet) {
-                Box(modifier = Modifier.widthIn(min = 48.dp), contentAlignment = Alignment.CenterEnd) {
-                    IconToggleButton(
-                        checked = isDarkTheme,
-                        onCheckedChange = onThemeChange,
-                    ) {
-                        Icon(
-                            imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
-                            contentDescription = "Toggle theme",
-                        )
-                    }
-                }
-            } else {
-                IconToggleButton(
-                    checked = isDarkTheme,
-                    onCheckedChange = onThemeChange,
-                ) {
-                    Icon(
-                        imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
-                        contentDescription = "Toggle theme",
-                    )
+                Section.entries.forEach { section ->
+                    TextButton(onClick = { onNavigate(section) }) { Text(stringResource(section.label)) }
                 }
             }
+            ThemeToggle(isDarkTheme = isDarkTheme, onThemeChange = onThemeChange)
         }
+    }
+}
+
+@Composable
+fun ThemeToggle(
+    isDarkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit,
+) {
+    IconToggleButton(
+        checked = isDarkTheme,
+        onCheckedChange = onThemeChange,
+    ) {
+        Icon(
+            imageVector = if (isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+            contentDescription = stringResource(Res.string.toggle_theme),
+        )
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import jp.kukv.portfolio.shared.layout.DesktopLayout
 import jp.kukv.portfolio.shared.layout.MobileLayout
+import jp.kukv.portfolio.shared.layout.Section
 
 @Composable
 fun App() {
@@ -32,7 +33,7 @@ fun App() {
     }
 
     val scrollState = remember { ScrollState(0) }
-    val sectionPositions = remember { mutableStateMapOf<String, Int>() }
+    val sectionPositions = remember { mutableStateMapOf<Section, Int>() }
     val snackbarHostState = remember { SnackbarHostState() }
 
     AppTheme(viewModel) {

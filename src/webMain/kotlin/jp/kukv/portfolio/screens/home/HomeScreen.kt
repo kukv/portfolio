@@ -17,11 +17,12 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import jp.kukv.portfolio.app.LocalAppViewModel
+import jp.kukv.portfolio.shared.layout.Section
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigate: (String) -> Unit,
+    onNavigate: (Section) -> Unit,
     topPadding: Dp = 0.dp,
 ) {
     val appViewModel = LocalAppViewModel.current
@@ -47,7 +48,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun DesktopIntroduction(onNavigate: (String) -> Unit) {
+fun DesktopIntroduction(onNavigate: (Section) -> Unit) {
     Row(
         modifier = Modifier.widthIn(max = 1000.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -67,7 +68,7 @@ fun DesktopIntroduction(onNavigate: (String) -> Unit) {
 }
 
 @Composable
-fun MobileTabletIntroduction(onNavigate: (String) -> Unit) {
+fun MobileTabletIntroduction(onNavigate: (Section) -> Unit) {
     Column(
         modifier = Modifier.widthIn(max = 1000.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

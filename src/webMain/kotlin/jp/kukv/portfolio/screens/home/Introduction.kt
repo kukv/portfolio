@@ -13,9 +13,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import jp.kukv.portfolio.shared.layout.Section
 
 @Composable
-fun Introduction(onNavigate: (String) -> Unit) {
+fun Introduction(onNavigate: (Section) -> Unit) {
     Text(
         text =
             buildAnnotatedString {
@@ -38,7 +39,7 @@ fun Introduction(onNavigate: (String) -> Unit) {
         textAlign = TextAlign.Center,
     )
     Spacer(modifier = Modifier.height(32.dp))
-    Button(onClick = { onNavigate("showcase") }) {
+    Button(onClick = { onNavigate(Section.Showcase) }) {
         Text("Showcase")
     }
 }
