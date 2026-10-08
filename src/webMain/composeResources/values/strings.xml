@@ -1,2 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<resources></resources>
+<resources>
+    <string name="app_title">Nonaka Koki | Software Engineer</string>
+    <string name="header_title">Portfolio</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_about">About</string>
+    <string name="nav_showcase">Showcase</string>
+    <string name="nav_contact">Contact</string>
+    <string name="menu">Menu</string>
+    <string name="toggle_theme">Toggle theme</string>
+
+    <string name="home_greeting">Hi, I'm</string>
+    <string name="home_name">Nonaka Koki</string>
+    <string name="home_role">Software Engineer</string>
+    <string name="home_status">Available for new opportunities</string>
+    <string name="home_ai_title">Building with AI</string>
+    <string name="home_ai_body">I design agent-driven development workflows to ship fast without cutting corners.</string>
+    <string name="home_now_title">Now building</string>
+    <string name="home_now_body">AI-powered products. Coming soon.</string>
+    <string name="home_cta_showcase">See my work</string>
+    <string name="home_cta_contact">Get in touch</string>
+    <string name="profile_image">Profile photo</string>
+
+    <string name="about_title">About Me</string>
+    <string name="skills_title">Skills &amp; Stack</string>
+    <string name="experience_title">Experience</string>
+
+    <string name="showcase_title">Showcase</string>
+    <string name="showcase_more">More</string>
+    <string name="showcase_close">Close</string>
+    <string name="showcase_image_placeholder">Image coming soon</string>
+    <string name="showcase_coming_soon">Coming Soon</string>
+    <string name="showcase_added">Added: %1$s</string>
+    <string name="showcase_technologies">Technologies: %1$s</string>
+    <string name="showcase_url">URL: %1$s</string>
+
+    <string name="contact_title">Contact</string>
+    <string name="contact_description">Please fill out the form below to get in touch.</string>
+    <string name="contact_first_name">First name*</string>
+    <string name="contact_last_name">Last name*</string>
+    <string name="contact_company">Company*</string>
+    <string name="contact_email">Email*</string>
+    <string name="contact_message">Message*</string>
+    <string name="contact_privacy">By selecting this, you agree to our privacy policy.</string>
+    <string name="contact_submit">Submit</string>
+    <string name="contact_sent">Message sent successfully!</string>
+    <string name="error_required">Required</string>
+    <string name="error_max_100">Max 100 characters</string>
+    <string name="error_max_254">Max 254 characters</string>
+    <string name="error_max_500">Max 500 characters</string>
+    <string name="error_invalid_email">Invalid email format</string>
+</resources>

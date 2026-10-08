@@ -128,3 +128,25 @@ spotless {
         targetExclude("build/**/*.kts", "bin/**/*.kts")
     }
 }
+
+// Compose Resources は訳し漏れがあると既定(英語)へ黙ってフォールバックするため、
+// values と values-ja のキーが一致することを check で保証する。
+val checkStringResources by tasks.registering {
+    val base = layout.projectDirectory.file("src/webMain/composeResources/values/strings.xml")
+    val ja = layout.projectDirectory.file("src/webMain/composeResources/values-ja/strings.xml")
+    inputs.files(base, ja)
+    doLast {
+        val keyPattern = Regex("""<string name="([^"]+)"""")
+
+        fun keys(file: File) = keyPattern.findAll(file.readText()).map { it.groupValues[1] }.toSet()
+
+        val enKeys = keys(base.asFile)
+        val jaKeys = keys(ja.asFile)
+        val errors = (enKeys - jaKeys).map { "values-ja に無い: $it" } + (jaKeys - enKeys).map { "values に無い: $it" }
+        if (errors.isNotEmpty()) {
+            throw GradleException("文言リソースのキーが一致しません:\n" + errors.joinToString("\n"))
+        }
+    }
+}
+
+tasks.named("check") { dependsOn(checkStringResources) }
