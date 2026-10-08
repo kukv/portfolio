@@ -58,7 +58,7 @@ Compose Resources を使う。
   - `MaterialExpressiveTheme` に `MotionScheme.expressive()` を指定する。
   - 角丸は大きめにする（Bento のタイルは `extraLarge` 相当、28dp 前後）。
   - 写真は Material 3 Expressive のシェイプ（クッキー形など）で切り抜く。
-- **フォント**: Noto Sans JP を Regular / Medium / Bold / ExtraBold の 4 つに絞る。Thin / ExtraLight / Light / SemiBold / Black のファイルと参照を削除する。名前や見出しには ExtraBold を使う。
+- **フォント**: Noto Sans JP を Regular / Medium / Bold の 3 つに絞る。それ以外のファイルと参照は削除する。名前や見出しには Bold を使う。（当初は ExtraBold も残す予定だったが、ExtraBold を指定したテキストが canvas 上で描画されなかったため除いた）
 
 ## ①-4 Home（Bento グリッド）
 
