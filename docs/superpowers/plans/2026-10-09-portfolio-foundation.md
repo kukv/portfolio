@@ -16,6 +16,7 @@
 ## 共通ルール
 
 - 作業ディレクトリはリポジトリのルート。コマンドはすべてルートから実行する。
+- このリポジトリのパスには `github.com` が含まれるため、worktree のガードが複雑なシェルコマンドを拒否することがある。コマンドは 1 つずつ実行し、パスはルートからの相対パスで書く。パイプ、`while` ループ、`$PWD` や `$HOME` を使ったコマンドは避ける。
 - コミットの前に必ず `./gradlew spotlessApply` を実行する。
 - コミットメッセージの末尾に次の行を付ける（以下のコマンド例では省略している）。
   ```
@@ -489,7 +490,7 @@ tasks.named("check") { dependsOn(checkStringResources) }
     <string name="menu">Menu</string>
     <string name="toggle_theme">Toggle theme</string>
 
-    <string name="home_greeting">Hi, I\'m</string>
+    <string name="home_greeting">Hi, I'm</string>
     <string name="home_name">Nonaka Koki</string>
     <string name="home_role">Software Engineer</string>
     <string name="home_status">Available for new opportunities</string>
@@ -1804,8 +1805,8 @@ Expected: 出力なし（ある場合は最も近い残存ウェイト `Normal` 
 Run: `./gradlew check wasmJsBrowserDistribution jsBrowserDistribution`
 Expected: `BUILD SUCCESSFUL`
 
-Run: `ls build/dist/wasmJs/productionExecutable/composeResources/portfolio.generated.resources/font/`
-Expected: `NotoSansJP-Bold.ttf  NotoSansJP-ExtraBold.ttf  NotoSansJP-Medium.ttf  NotoSansJP-Regular.ttf` の 4 つだけ
+Run: `find build/dist/wasmJs -name "NotoSansJP-*.ttf"`
+Expected: `NotoSansJP-Regular.ttf`、`NotoSansJP-Medium.ttf`、`NotoSansJP-Bold.ttf`、`NotoSansJP-ExtraBold.ttf` の 4 件だけが表示される。
 
 - [ ] **Step 6: コミット**
 
@@ -2466,7 +2467,7 @@ import に `androidx.compose.runtime.LaunchedEffect` と `jp.kukv.portfolio.shar
 Run:
 ```bash
 mkdir -p build/og
-"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu --hide-scrollbars --window-size=1200,630 --screenshot=src/webMain/resources/og-image.png "file://$PWD/build/og/og-image.html"
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu --hide-scrollbars --window-size=1200,630 --screenshot=src/webMain/resources/og-image.png build/og/og-image.html
 ```
 Expected: `src/webMain/resources/og-image.png`（1200×630）ができる。`file src/webMain/resources/og-image.png` で `1200 x 630` と表示される。
 
