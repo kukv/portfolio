@@ -4,8 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,8 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import jp.kukv.portfolio.shared.layout.LayoutSize
 import jp.kukv.portfolio.shared.layout.currentLayoutSize
-import kotlin.collections.chunked
-import kotlin.collections.forEach
+import org.jetbrains.compose.resources.stringResource
+import portfolio.generated.resources.Res
+import portfolio.generated.resources.skills_title
 
 data class SkillCategory(val label: String, val skills: List<String>)
 
@@ -40,7 +39,6 @@ data class Experience(
     val description: String,
 )
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutScreen(modifier: Modifier = Modifier) {
     Column(
@@ -103,143 +101,33 @@ private val skillCategories =
 
 @Composable
 fun SkillAndStacksSection() {
-    val layoutSize = currentLayoutSize()
-
-    val scope = remember { skillCategories }
+    val columns =
+        when (currentLayoutSize()) {
+            LayoutSize.Compact -> 1
+            LayoutSize.Medium -> 2
+            LayoutSize.Expanded -> 3
+        }
 
     Text(
-        text = "Skills & Stack",
+        text = stringResource(Res.string.skills_title),
         style = MaterialTheme.typography.headlineLarge,
         color = MaterialTheme.colorScheme.onBackground,
     )
     Spacer(modifier = Modifier.height(32.dp))
-    if (layoutSize == LayoutSize.Compact) {
-        Column(
-            modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            scope.forEach { category ->
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        Text(
-                            text = category.label,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            category.skills.forEach { skill ->
-                                Surface(
-                                    shape = MaterialTheme.shapes.small,
-                                    color = MaterialTheme.colorScheme.surface,
-                                ) {
-                                    Text(
-                                        text = skill,
-                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                        style = MaterialTheme.typography.labelSmall,
-                                    )
-                                }
-                            }
-                        }
-                    }
+    Column(
+        modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        skillCategories.chunked(columns).forEach { rowCategories ->
+            Row(
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                rowCategories.forEach { category ->
+                    SkillCategoryCard(category = category, modifier = Modifier.weight(1f).fillMaxHeight())
                 }
-            }
-        }
-    } else if (layoutSize == LayoutSize.Medium) {
-        Column(
-            modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            scope.chunked(2).forEach { rowCategories ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    rowCategories.forEach { category ->
-                        Surface(
-                            modifier = Modifier.weight(1f),
-                            shape = MaterialTheme.shapes.medium,
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                        ) {
-                            Column(modifier = Modifier.padding(20.dp)) {
-                                Text(
-                                    text = category.label,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                                FlowRow(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                                ) {
-                                    category.skills.forEach { skill ->
-                                        Surface(
-                                            shape = MaterialTheme.shapes.small,
-                                            color = MaterialTheme.colorScheme.surface,
-                                        ) {
-                                            Text(
-                                                text = skill,
-                                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                                style = MaterialTheme.typography.labelSmall,
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (rowCategories.size == 1) {
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
-                }
-            }
-        }
-    } else {
-        Row(
-            modifier = Modifier.widthIn(max = 1000.dp).fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            scope.forEach { category ->
-                Surface(
-                    modifier = Modifier.weight(1f),
-                    shape = MaterialTheme.shapes.medium,
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        Text(
-                            text = category.label,
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            category.skills.forEach { skill ->
-                                Surface(
-                                    shape = MaterialTheme.shapes.small,
-                                    color = MaterialTheme.colorScheme.surface,
-                                ) {
-                                    Text(
-                                        text = skill,
-                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                        style = MaterialTheme.typography.labelSmall,
-                                    )
-                                }
-                            }
-                        }
-                    }
+                repeat(columns - rowCategories.size) {
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
