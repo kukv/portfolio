@@ -65,16 +65,18 @@ val jsYarnResolutions =
         // 1.x(minimatch@3 経由)と 2.x(minimatch@9 経由)が併存するが、
         // yarn v1 の resolutions はバージョン別に書き分けられないため 2.x に一本化する。
         // brace-expansion 2.x は 1.x と同一の API(expand)で drop-in 互換。
-        "brace-expansion" to "2.1.4", // GHSA-f886-m6hf-6m8v / GHSA-3jxr-9vmj-r5cp / GHSA-mh99-v99m-4gvg / GHSA-rgw5-rvv9-x895
+        // GHSA-f886-m6hf-6m8v / GHSA-3jxr-9vmj-r5cp / GHSA-mh99-v99m-4gvg / GHSA-rgw5-rvv9-x895 /
+        // GHSA-6j4f-fj2g-mc7p / GHSA-qhr7-859c-m2p7 / GHSA-q2hr-2g5m-vwhr
+        "brace-expansion" to "2.1.7",
         "browserslist" to "4.28.7", // GHSA-73wf-gq98-2v4g
         "diff" to "8.0.3", // GHSA-73rr-hh4g-fpgx
-        "engine.io" to "6.6.7", // GHSA-gr94-w7qr-f4j3
+        "engine.io" to "6.6.10", // GHSA-gr94-w7qr-f4j3 / GHSA-2gc4-cqfq-p2gv
         // GHSA-q3j6-qgpj-74h6 / GHSA-v39h-62p7-jpjc / GHSA-4c8g-83qw-93j6 /
         // GHSA-v2hh-gcrm-f6hx / GHSA-7p8r-x3mc-p8w7 / GHSA-f65p-4m7j-42xc /
-        // GHSA-5jgf-p345-68v8 / GHSA-qw65-cvwx-89v3
+        // GHSA-5jgf-p345-68v8 / GHSA-qw65-cvwx-89v3 / GHSA-hrr3-gc8f-f4qj
         // GHSA-qw65-cvwx-89v3 はまだ global advisory DB に未掲載で OSV は検知しない。
         // 上流(fastify/fast-uri)の v3.1.7 リリースノートを根拠に先行して上げる。
-        "fast-uri" to "3.1.7",
+        "fast-uri" to "3.1.8",
         "flatted" to "3.4.2", // GHSA-25h7-pfq9-p65f / GHSA-rf6f-7fwh-wjgh
         "follow-redirects" to "1.16.0", // GHSA-r4q5-vmmm-2653
         "http-proxy-middleware" to "2.0.10", // GHSA-64mm-vxmg-q3vj
@@ -95,6 +97,7 @@ val jsYarnResolutions =
         // resolution でのメジャー跨ぎは webpack 系ビルドツールを壊すリスクが大きいため見送る。
         "uuid" to "11.1.1", // GHSA-w5hq-g745-h8pq
         "webpack" to "5.104.1", // GHSA-38r7-794h-5758 / GHSA-8fgc-7cc6-rx7x
+        "webpack-dev-middleware" to "7.4.6", // GHSA-g84c-rxfj-3j2c
         "webpack-dev-server" to "5.2.6", // GHSA-79cf-xcqc-c78w / GHSA-mx8g-39q3-5c79 / GHSA-f5vj-f2hx-8m93
         "websocket-driver" to "0.7.5", // GHSA-mp7j-qc5w-4988
         "ws" to "8.21.0", // GHSA-58qx-3vcg-4xpx / GHSA-96hv-2xvq-fx4p
