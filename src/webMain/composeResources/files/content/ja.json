@@ -20,6 +20,20 @@
       "organization": "（仮）受託開発企業（社員 50 名規模）",
       "description": "（仮）担当したことと、その成果を書きます。",
       "technologies": ["Java", "Spring Boot"]
+    },
+    {
+      "period": "2016.04 — 2018.03",
+      "role": "（仮）アプリケーションエンジニア",
+      "organization": "（仮）Web サービス企業（社員 100 名規模）",
+      "description": "（仮）担当したことと、その成果を書きます。",
+      "technologies": ["PHP", "MySQL"]
+    },
+    {
+      "period": "2014.04 — 2016.03",
+      "role": "（仮）システムエンジニア",
+      "organization": "（仮）SIer（社員 1,000 名規模）",
+      "description": "（仮）担当したことと、その成果を書きます。",
+      "technologies": ["Java", "Oracle Database"]
     }
   ]
 }

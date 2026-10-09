@@ -20,6 +20,20 @@
       "organization": "(Placeholder) Contract development company (about 50 employees)",
       "description": "(Placeholder) What I worked on and what it achieved.",
       "technologies": ["Java", "Spring Boot"]
+    },
+    {
+      "period": "2016.04 — 2018.03",
+      "role": "(Placeholder) Application Engineer",
+      "organization": "(Placeholder) Web service company (about 100 employees)",
+      "description": "(Placeholder) What I worked on and what it achieved.",
+      "technologies": ["PHP", "MySQL"]
+    },
+    {
+      "period": "2014.04 — 2016.03",
+      "role": "(Placeholder) Systems Engineer",
+      "organization": "(Placeholder) IT services company (about 1,000 employees)",
+      "description": "(Placeholder) What I worked on and what it achieved.",
+      "technologies": ["Java", "Oracle Database"]
     }
   ]
 }
