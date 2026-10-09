@@ -32,15 +32,6 @@ import portfolio.generated.resources.about_title
 import portfolio.generated.resources.experience_title
 import portfolio.generated.resources.skills_title
 
-data class SkillCategory(val label: String, val skills: List<String>)
-
-data class Experience(
-    val period: String,
-    val role: String,
-    val company: String,
-    val description: String,
-)
-
 @Composable
 fun AboutScreen(modifier: Modifier = Modifier) {
     Column(
@@ -141,26 +132,29 @@ private val experiences =
         Experience(
             period = "2022.04 — Present",
             role = "Senior Software Engineer",
-            company = "Kotlin Corp",
+            organization = "Kotlin Corp",
             description =
                 "Leading development of KMP-based cross-platform products. " +
                     "Improved build performance by 40% through Gradle modularization and introduced Compose Multiplatform for web deployment.",
+            technologies = emptyList(),
         ),
         Experience(
             period = "2020.04 — 2022.03",
             role = "Software Engineer",
-            company = "Mobile Solutions Inc.",
+            organization = "Mobile Solutions Inc.",
             description =
                 "Developed Android apps with Kotlin and Jetpack Compose. " +
                     "Delivered 10+ client applications with high performance and maintainability standards.",
+            technologies = emptyList(),
         ),
         Experience(
             period = "2018.04 — 2020.03",
             role = "Junior Engineer",
-            company = "Digital Lab LLC",
+            organization = "Digital Lab LLC",
             description =
                 "Worked on native Android and server-side Kotlin projects. " +
                     "Gained experience with REST API design and Kotlin coroutines.",
+            technologies = emptyList(),
         ),
     )
 
@@ -219,7 +213,7 @@ fun ExperienceSection() {
                         fontWeight = FontWeight.Bold,
                     )
                     Text(
-                        text = exp.company,
+                        text = exp.organization,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
