@@ -7,6 +7,7 @@ plugins {
 
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 
     alias(libs.plugins.spotless)
 }
@@ -33,6 +34,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
