@@ -79,7 +79,7 @@ data class Experience(
 ## ②-3 読み込みと言語の切り替え
 
 - Compose Resources の `files/` は `values-ja` のような言語別の仕組みに対応していない。そのため表示中の言語に合わせて `files/content/${language.tag}.json` を自分で選び、`Res.readBytes` で読む。
-- `AboutScreen` は今の言語を知らないため、`AppEnvironment` で `LocalAppLanguage`（CompositionLocal）を提供する。
+- 今の言語は、既存の `LocalAppViewModel.current.language` から取る（`Layout.kt` と同じやり方）。言語のための CompositionLocal は新しく作らない。
 - `AboutScreen` では `produceState` で JSON を読み込み、デコードする。言語を切り替えると `AppEnvironment` の `key(language)` で中身が作り直され、新しい言語の JSON を読み直す。
 - 本文の表示は今のレイアウト（自己紹介のカード、Skills のグリッド、Experience のタイムライン）を引き継ぐ。変更点は次の 2 つ。
   - 自己紹介の本文は `\n\n` で段落に分けて表示する。
@@ -93,4 +93,6 @@ data class Experience(
 ## ②-5 テスト
 
 - **デコードの単体テスト**: サンプルの JSON 文字列が `AboutContent` に正しく変換されることを確かめる。
-- **実ファイルの確認**: `ja.json` と `en.json` が両方とも解析できることを確かめたい。ただし、テスト環境から Compose Resources のファイルを読めるかは確認していない。読めない場合の確認方法は、実装計画を立てる段階で決める。
+- **実ファイルの確認**: wasmJs のブラウザテスト（Karma）は Compose Resources のファイルを配信しない（`Res.readBytes` が 404 になることを確認済み）。そのため Gradle のタスクで `files/content/*.json` の中身を Kotlin の定数としてテスト用のソースに書き出し、テストから読む。テストでは次の 2 点を確かめる。
+  - 各ファイルが `AboutContent` として解析できる。
+  - ファイルが `AppLanguage` のすべての言語の分そろっている（アプリが読みに行く `${language.tag}.json` が必ずある）。
