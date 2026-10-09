@@ -1,0 +1,39 @@
+{
+  "about": "(Placeholder) An introduction goes here. The first paragraph explains that I am a software engineer who builds with AI agents.\n\n(Placeholder) The second paragraph covers my experience so far and what I am working on now.",
+  "skills": [
+    { "label": "Languages", "items": ["Kotlin", "TypeScript", "Java"] },
+    { "label": "Frontend / Mobile", "items": ["Compose Multiplatform", "React"] },
+    { "label": "Backend / Infra", "items": ["Ktor", "PostgreSQL", "Docker", "GitHub Actions"] },
+    { "label": "AI", "items": ["Claude Code", "Codex"] }
+  ],
+  "experiences": [
+    {
+      "period": "2022.04 — Present",
+      "role": "(Placeholder) Software Engineer",
+      "organization": "(Placeholder) SaaS company (about 300 employees)",
+      "description": "(Placeholder) What I worked on and what it achieved.",
+      "technologies": ["Kotlin", "TypeScript", "AWS"]
+    },
+    {
+      "period": "2018.04 — 2022.03",
+      "role": "(Placeholder) Software Engineer",
+      "organization": "(Placeholder) Contract development company (about 50 employees)",
+      "description": "(Placeholder) What I worked on and what it achieved.",
+      "technologies": ["Java", "Spring Boot"]
+    },
+    {
+      "period": "2016.04 — 2018.03",
+      "role": "(Placeholder) Application Engineer",
+      "organization": "(Placeholder) Web service company (about 100 employees)",
+      "description": "(Placeholder) What I worked on and what it achieved.",
+      "technologies": ["PHP", "MySQL"]
+    },
+    {
+      "period": "2014.04 — 2016.03",
+      "role": "(Placeholder) Systems Engineer",
+      "organization": "(Placeholder) IT services company (about 1,000 employees)",
+      "description": "(Placeholder) What I worked on and what it achieved.",
+      "technologies": ["Java", "Oracle Database"]
+    }
+  ]
+}

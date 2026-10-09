@@ -7,6 +7,7 @@ plugins {
 
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 
     alias(libs.plugins.spotless)
 }
@@ -33,6 +34,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -150,3 +152,35 @@ val checkStringResources =
     }
 
 tasks.named("check") { dependsOn(checkStringResources) }
+
+// wasmJs のブラウザテスト(Karma)は Compose Resources のファイルを配信しないため、
+// files/content/*.json の中身をテスト用の Kotlin ソースに書き出し、実ファイルが解析できることをテストで確かめる。
+val generateContentFixtures =
+    tasks.register("generateContentFixtures") {
+        val contentDir = layout.projectDirectory.dir("src/webMain/composeResources/files/content")
+        val outputDir = layout.buildDirectory.dir("generated/contentFixtures")
+        inputs.dir(contentDir)
+        outputs.dir(outputDir)
+        doLast {
+            val entries =
+                contentDir.asFile
+                    .listFiles { file -> file.extension == "json" }
+                    .orEmpty()
+                    .sortedBy { it.name }
+                    .joinToString("") { file ->
+                        // raw string の中で $ がテンプレートとして解釈されないようにする。
+                        val text = file.readText().replace("$", "\${'$'}")
+                        "    \"${file.nameWithoutExtension}\" to \"\"\"$text\"\"\",\n"
+                    }
+            val output = outputDir.get().file("jp/kukv/portfolio/screens/about/ContentFixtures.kt").asFile
+            output.parentFile.mkdirs()
+            output.writeText(
+                "package jp.kukv.portfolio.screens.about\n\n" +
+                    "/** ファイル名(拡張子なし) → JSON の中身。 */\n" +
+                    "val contentFixtures: Map<String, String> = mapOf(\n$entries)\n",
+            )
+        }
+    }
+
+// webTest は階層テンプレートで後から作られるため、作成されたときに設定する。
+kotlin.sourceSets.matching { it.name == "webTest" }.configureEach { kotlin.srcDir(generateContentFixtures) }

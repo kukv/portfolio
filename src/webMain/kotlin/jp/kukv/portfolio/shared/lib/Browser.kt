@@ -33,3 +33,7 @@ fun setDocumentTitle(title: String) {
 fun removeElementById(id: String) {
     js("var element = document.getElementById(id); if (element) element.remove()")
 }
+
+fun logError(message: String) {
+    js("console.error(message)")
+}

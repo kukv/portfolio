@@ -1,0 +1,39 @@
+{
+  "about": "（仮）ここに自己紹介の本文が入ります。AI エージェントと一緒に開発を進めるソフトウェアエンジニアであることを、最初の段落で伝えます。\n\n（仮）2 段落目には、これまでの経験と、いま取り組んでいることを書きます。",
+  "skills": [
+    { "label": "Languages", "items": ["Kotlin", "TypeScript", "Java"] },
+    { "label": "Frontend / Mobile", "items": ["Compose Multiplatform", "React"] },
+    { "label": "Backend / Infra", "items": ["Ktor", "PostgreSQL", "Docker", "GitHub Actions"] },
+    { "label": "AI", "items": ["Claude Code", "Codex"] }
+  ],
+  "experiences": [
+    {
+      "period": "2022.04 — 現在",
+      "role": "（仮）ソフトウェアエンジニア",
+      "organization": "（仮）SaaS 企業（社員 300 名規模）",
+      "description": "（仮）担当したことと、その成果を書きます。",
+      "technologies": ["Kotlin", "TypeScript", "AWS"]
+    },
+    {
+      "period": "2018.04 — 2022.03",
+      "role": "（仮）ソフトウェアエンジニア",
+      "organization": "（仮）受託開発企業（社員 50 名規模）",
+      "description": "（仮）担当したことと、その成果を書きます。",
+      "technologies": ["Java", "Spring Boot"]
+    },
+    {
+      "period": "2016.04 — 2018.03",
+      "role": "（仮）アプリケーションエンジニア",
+      "organization": "（仮）Web サービス企業（社員 100 名規模）",
+      "description": "（仮）担当したことと、その成果を書きます。",
+      "technologies": ["PHP", "MySQL"]
+    },
+    {
+      "period": "2014.04 — 2016.03",
+      "role": "（仮）システムエンジニア",
+      "organization": "（仮）SIer（社員 1,000 名規模）",
+      "description": "（仮）担当したことと、その成果を書きます。",
+      "technologies": ["Java", "Oracle Database"]
+    }
+  ]
+}

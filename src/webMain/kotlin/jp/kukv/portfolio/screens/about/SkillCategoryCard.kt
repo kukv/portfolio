@@ -38,7 +38,7 @@ fun SkillCategoryCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                category.skills.forEach { skill ->
+                category.items.forEach { skill ->
                     Surface(
                         shape = MaterialTheme.shapes.small,
                         color = MaterialTheme.colorScheme.surface,
