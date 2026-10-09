@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_title">Nonaka Koki | ソフトウェアエンジニア</string>
+    <string name="header_title">Portfolio</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_about">About</string>
+    <string name="nav_showcase">Showcase</string>
+    <string name="nav_contact">Contact</string>
+    <string name="menu">メニュー</string>
+    <string name="toggle_theme">テーマを切り替え</string>
+
+    <string name="home_greeting">こんにちは、</string>
+    <string name="home_name">Nonaka Koki</string>
+    <string name="home_role">ソフトウェアエンジニア</string>
+    <string name="home_status">新しい機会を探しています</string>
+    <string name="home_ai_title">AI と一緒に開発する</string>
+    <string name="home_ai_body">AI エージェントを前提にした開発の進め方を組み立て、速く、品質を落とさずに作っています。</string>
+    <string name="home_now_title">いま作っているもの</string>
+    <string name="home_now_body">AI を組み込んだプロダクト。準備中です。</string>
+    <string name="home_cta_showcase">作品を見る</string>
+    <string name="home_cta_contact">連絡する</string>
+    <string name="profile_image">プロフィール写真</string>
+
+    <string name="about_title">自己紹介</string>
+    <string name="skills_title">スキルと技術</string>
+    <string name="experience_title">経歴</string>
+
+    <string name="showcase_title">作品</string>
+    <string name="showcase_more">もっと見る</string>
+    <string name="showcase_close">閉じる</string>
+    <string name="showcase_image_placeholder">画像は準備中です</string>
+    <string name="showcase_coming_soon">近日公開</string>
+    <string name="showcase_added">追加日: %1$s</string>
+    <string name="showcase_technologies">使用技術: %1$s</string>
+    <string name="showcase_url">URL: %1$s</string>
+
+    <string name="contact_title">お問い合わせ</string>
+    <string name="contact_description">以下のフォームからご連絡ください。</string>
+    <string name="contact_first_name">名*</string>
+    <string name="contact_last_name">姓*</string>
+    <string name="contact_company">会社名*</string>
+    <string name="contact_email">メールアドレス*</string>
+    <string name="contact_message">メッセージ*</string>
+    <string name="contact_privacy">チェックすると、プライバシーポリシーに同意したものとみなします。</string>
+    <string name="contact_submit">送信</string>
+    <string name="contact_sent">メッセージを送信しました。</string>
+    <string name="error_required">必須項目です</string>
+    <string name="error_max_100">100 文字以内で入力してください</string>
+    <string name="error_max_254">254 文字以内で入力してください</string>
+    <string name="error_max_500">500 文字以内で入力してください</string>
+    <string name="error_invalid_email">メールアドレスの形式が正しくありません</string>
+</resources>

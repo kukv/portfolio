@@ -16,7 +16,11 @@ kotlin {
     jvmToolchain(javaVersion.toInt())
 
     js(IR) {
-        browser()
+        browser {
+            // karma が上記 resolutions で固定した minimatch 9.x と非互換で起動できないため、
+            // js のブラウザテストは無効化し、テストは wasmJs で実行する。
+            testTask { enabled = false }
+        }
         binaries.executable()
     }
 
@@ -37,7 +41,6 @@ kotlin {
             implementation(libs.compose.adaptive)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
-            implementation(libs.material3.adaptive.navigation.suite)
 
             implementation(libs.compose.ui.tooling.preview)
 
@@ -124,3 +127,26 @@ spotless {
         targetExclude("build/**/*.kts", "bin/**/*.kts")
     }
 }
+
+// Compose Resources は訳し漏れがあると既定(英語)へ黙ってフォールバックするため、
+// values と values-ja のキーが一致することを check で保証する。
+val checkStringResources =
+    tasks.register("checkStringResources") {
+        val base = layout.projectDirectory.file("src/webMain/composeResources/values/strings.xml")
+        val ja = layout.projectDirectory.file("src/webMain/composeResources/values-ja/strings.xml")
+        inputs.files(base, ja)
+        doLast {
+            val keyPattern = Regex("""<string name="([^"]+)"""")
+
+            fun keys(file: File) = keyPattern.findAll(file.readText()).map { it.groupValues[1] }.toSet()
+
+            val enKeys = keys(base.asFile)
+            val jaKeys = keys(ja.asFile)
+            val errors = (enKeys - jaKeys).map { "values-ja に無い: $it" } + (jaKeys - enKeys).map { "values に無い: $it" }
+            if (errors.isNotEmpty()) {
+                throw GradleException("文言リソースのキーが一致しません:\n" + errors.joinToString("\n"))
+            }
+        }
+    }
+
+tasks.named("check") { dependsOn(checkStringResources) }

@@ -32,14 +32,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun MobileLayout(
     scrollState: ScrollState,
-    sectionPositions: SnapshotStateMap<String, Int>,
+    sectionPositions: SnapshotStateMap<Section, Int>,
     snackbarHostState: SnackbarHostState,
 ) {
     val appViewModel = LocalAppViewModel.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    fun navigate(section: String) {
+    fun navigate(section: Section) {
         scope.launch { scrollToSection(section, scrollState, sectionPositions) }
     }
 
@@ -55,6 +55,8 @@ fun MobileLayout(
                 },
                 isDarkTheme = appViewModel.isDarkTheme,
                 onThemeChange = { appViewModel.setDarkTheme(it) },
+                language = appViewModel.language,
+                onLanguageChange = { appViewModel.setLanguage(it) },
             )
         },
     ) {
@@ -80,13 +82,13 @@ fun MobileLayout(
 @Composable
 fun DesktopLayout(
     scrollState: ScrollState,
-    sectionPositions: SnapshotStateMap<String, Int>,
+    sectionPositions: SnapshotStateMap<Section, Int>,
     snackbarHostState: SnackbarHostState,
 ) {
     val appViewModel = LocalAppViewModel.current
     val scope = rememberCoroutineScope()
 
-    fun navigate(section: String) {
+    fun navigate(section: Section) {
         scope.launch { scrollToSection(section, scrollState, sectionPositions) }
     }
 
@@ -94,9 +96,10 @@ fun DesktopLayout(
         topBar = {
             DesktopHeader(
                 onNavigate = ::navigate,
-                isTablet = appViewModel.windowSizeState.isTablet,
                 isDarkTheme = appViewModel.isDarkTheme,
                 onThemeChange = { appViewModel.setDarkTheme(it) },
+                language = appViewModel.language,
+                onLanguageChange = { appViewModel.setLanguage(it) },
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -112,21 +115,29 @@ fun DesktopLayout(
 }
 
 private suspend fun scrollToSection(
-    section: String,
+    section: Section,
     scrollState: ScrollState,
-    sectionPositions: SnapshotStateMap<String, Int>,
+    sectionPositions: SnapshotStateMap<Section, Int>,
 ) {
     val pos = sectionPositions[section] ?: 0
     scrollState.animateScrollTo(pos)
 }
 
+private fun Modifier.trackPosition(
+    section: Section,
+    sectionPositions: SnapshotStateMap<Section, Int>,
+): Modifier =
+    onGloballyPositioned { coordinates ->
+        sectionPositions[section] = maxOf(0, coordinates.positionInParent().y.toInt())
+    }
+
 @Composable
 private fun MainContent(
     padding: PaddingValues,
     scrollState: ScrollState,
-    sectionPositions: SnapshotStateMap<String, Int>,
+    sectionPositions: SnapshotStateMap<Section, Int>,
     snackbarHostState: SnackbarHostState,
-    onNavigate: (String) -> Unit,
+    onNavigate: (Section) -> Unit,
 ) {
     Column(
         modifier =
@@ -136,35 +147,14 @@ private fun MainContent(
                 .verticalScroll(scrollState),
     ) {
         HomeScreen(
-            modifier =
-                Modifier.onGloballyPositioned { coordinates ->
-                    val pos = coordinates.positionInParent().y.toInt()
-                    sectionPositions["home"] = maxOf(0, pos)
-                },
             onNavigate = onNavigate,
-            topPadding = padding.calculateTopPadding(),
+            modifier = Modifier.trackPosition(Section.Home, sectionPositions),
         )
-        AboutScreen(
-            modifier =
-                Modifier.onGloballyPositioned { coordinates ->
-                    val pos = coordinates.positionInParent().y.toInt()
-                    sectionPositions["about"] = maxOf(0, pos)
-                },
-        )
-        ShowcaseScreen(
-            modifier =
-                Modifier.onGloballyPositioned { coordinates ->
-                    val pos = coordinates.positionInParent().y.toInt()
-                    sectionPositions["showcase"] = maxOf(0, pos)
-                },
-        )
+        AboutScreen(modifier = Modifier.trackPosition(Section.About, sectionPositions))
+        ShowcaseScreen(modifier = Modifier.trackPosition(Section.Showcase, sectionPositions))
         ContactScreen(
             onShowSnackbar = { message -> snackbarHostState.showSnackbar(message) },
-            modifier =
-                Modifier.onGloballyPositioned { coordinates ->
-                    val pos = coordinates.positionInParent().y.toInt()
-                    sectionPositions["contact"] = maxOf(0, pos)
-                },
+            modifier = Modifier.trackPosition(Section.Contact, sectionPositions),
         )
         Footer()
     }
