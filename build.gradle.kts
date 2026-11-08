@@ -66,7 +66,7 @@ kotlin {
 val jsYarnResolutions =
     mapOf(
         "baseline-browser-mapping" to "2.11.0", // GHSA-w5vr-8v7q-w6rv
-        "body-parser" to "1.20.6", // GHSA-v422-hmwv-36x6
+        "body-parser" to "1.20.9", // GHSA-v422-hmwv-36x6 / GHSA-27r3-jxmh-p828
         // 1.x(minimatch@3 経由)と 2.x(minimatch@9 経由)が併存するが、
         // yarn v1 の resolutions はバージョン別に書き分けられないため 2.x に一本化する。
         // brace-expansion 2.x は 1.x と同一の API(expand)で drop-in 互換。
@@ -78,24 +78,26 @@ val jsYarnResolutions =
         "engine.io" to "6.6.10", // GHSA-gr94-w7qr-f4j3 / GHSA-2gc4-cqfq-p2gv
         // GHSA-q3j6-qgpj-74h6 / GHSA-v39h-62p7-jpjc / GHSA-4c8g-83qw-93j6 /
         // GHSA-v2hh-gcrm-f6hx / GHSA-7p8r-x3mc-p8w7 / GHSA-f65p-4m7j-42xc /
-        // GHSA-5jgf-p345-68v8 / GHSA-qw65-cvwx-89v3 / GHSA-hrr3-gc8f-f4qj
+        // GHSA-5jgf-p345-68v8 / GHSA-qw65-cvwx-89v3 / GHSA-hrr3-gc8f-f4qj /
+        // GHSA-333x-w4r6-6crp / GHSA-w74x-v6f9-j3xg / GHSA-wjr9-j795-jxcr / GHSA-xhq7-xmqj-769h
         // GHSA-qw65-cvwx-89v3 はまだ global advisory DB に未掲載で OSV は検知しない。
         // 上流(fastify/fast-uri)の v3.1.7 リリースノートを根拠に先行して上げる。
-        "fast-uri" to "3.1.8",
+        "fast-uri" to "3.1.9",
         "flatted" to "3.4.2", // GHSA-25h7-pfq9-p65f / GHSA-rf6f-7fwh-wjgh
-        "follow-redirects" to "1.16.0", // GHSA-r4q5-vmmm-2653
+        "follow-redirects" to "1.16.2", // GHSA-r4q5-vmmm-2653 / GHSA-8r9p-f939-6h3c / GHSA-mrwp-f3q8-3g9p / GHSA-q3jh-wrc6-jgq8
         "http-proxy-middleware" to "2.0.10", // GHSA-64mm-vxmg-q3vj
         "js-yaml" to "4.3.2", // GHSA-h67p-54hq-rp68 / GHSA-52cp-r559-cp3m / GHSA-5p4m-2wfm-xmqj / GHSA-2883-xcg3-v3hh
-        "launch-editor" to "2.14.1", // GHSA-v6wh-96g9-6wx3
-        "lodash" to "4.18.0", // GHSA-f23m-r3pf-42rh
-        // 3.x と 9.x が併存するが書き分けられないため 9.x に一本化する。
-        "minimatch" to "9.0.7", // GHSA-3ppc-4f35-3m26 / GHSA-23c5-xmqv-rm74
-        "node-forge" to "1.4.0", // GHSA-2328-f5f3-gj25
+        "launch-editor" to "2.14.2", // GHSA-v6wh-96g9-6wx3 / GHSA-587h-7wmj-h5pm / GHSA-698v-4r3x-3vcv / GHSA-r825-w8mm-5pxw
+        "lodash" to "4.18.1", // GHSA-f23m-r3pf-42rh
+        // 3.x と 9.x が併存するが書き分けられないため一本化する。
+        // GHSA-g3hv-75wg-m249 は 7.x 以降の全系列が影響を受け 11.0.1 でしか修正されないため 11.x に上げる。
+        "minimatch" to "11.0.1", // GHSA-3ppc-4f35-3m26 / GHSA-23c5-xmqv-rm74 / GHSA-g3hv-75wg-m249
+        "node-forge" to "1.4.1", // GHSA-2328-f5f3-gj25 / GHSA-86w9-cpqp-85rv ほか
         "path-to-regexp" to "0.1.13", // GHSA-37ch-88jc-xwx2
         "picomatch" to "2.3.2", // GHSA-3v7f-55p6-f55p
         "proxy-addr" to "2.0.8", // GHSA-jqcg-44mw-7w3h
-        "qs" to "6.16.0", // GHSA-q8mj-m7cp-5q26 / GHSA-4mjr-xmp4-gh2g
-        "serialize-javascript" to "7.0.5", // GHSA-5c6j-r48x-rmvq / GHSA-qj8w-gfj5-8c6v
+        "qs" to "6.16.1", // GHSA-q8mj-m7cp-5q26 / GHSA-4mjr-xmp4-gh2g / GHSA-6pq8-jhm2-2vcw
+        "serialize-javascript" to "7.1.3", // GHSA-5c6j-r48x-rmvq / GHSA-qj8w-gfj5-8c6v / GHSA-m5mm-p8h7-m29v
         "shell-quote" to "1.11.0", // GHSA-w7jw-789q-3m8p / GHSA-395f-4hp3-45gv / GHSA-pqg4-j6r4-53mv
         "socket.io-parser" to "4.2.7", // GHSA-677m-j7p3-52f9 / GHSA-2m8v-j782-fhvr
         "source-map-js" to "1.2.2", // GHSA-68fv-2mgg-jv7q

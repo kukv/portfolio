@@ -7,9 +7,3 @@
 id = "GHSA-vfj7-8cjw-p6xm"
 ignoreUntil = 2027-01-08
 reason = "修正版未リリース。webpack の watch / glob 処理経由の開発時のみの依存"
-
-[[IgnoredVulns]]
-# node-forge 1.4.0(最新)まで影響。webpack-dev-server → selfsigned 経由。
-id = "GHSA-86w9-cpqp-85rv"
-ignoreUntil = 2027-01-08
-reason = "修正版未リリース。dev server の自己署名証明書生成でのみ使われ、署名検証には使われない"
